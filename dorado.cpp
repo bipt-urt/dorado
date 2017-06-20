@@ -1,6 +1,7 @@
 // Dorado编译器
 // 2017 北京石油化工学院
 // 王万霖 梁永宁
+// g++ dorado.cpp -o dorado --std=c++11
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -26,7 +27,7 @@ u16string from_bytes(string _str)
 }
 
 int main()
-{  
+{
 	fstream files("text/a.cpp",std::ios::in);
 	string line;
 	while(getline(files,line))
@@ -50,7 +51,5 @@ int main()
 			}
 		}
 		cout<<to_bytes(newline)<<endl;
-	
 	}
-
 }
