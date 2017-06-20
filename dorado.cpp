@@ -1,6 +1,7 @@
 // Dorado编译器
 // 2017 北京石油化工学院
 // 王万霖 梁永宁
+// g++ dorado.cpp -o dorado --std=c++11
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -27,10 +28,7 @@ u32string from_bytes(string _str)
 
 int main()
 {
-	fstream files=("1.c",std::ios::in);
-	u32stream line;
-	for(getline(file,line))
-	 cout<<line<<endl;
-
+	u32string a = U"你好，世界！";
+	cout<<to_bytes(a)<<endl;
 	return 0;
 }
