@@ -26,6 +26,12 @@ u32string from_bytes(string _str)
 	return cvt.from_bytes(_str);
 }
 
+class typeAttribute
+{
+	public:
+		
+};
+
 int main()
 {
 	u32string a = U"你好，世界！";
