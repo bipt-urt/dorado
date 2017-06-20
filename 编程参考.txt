@@ -1,0 +1,6 @@
+标准库<iostream>,<fstream>,<sstream>中的流对象(文件流,输入输出流,内存中的字符串流)
+均属于流对象，使用<<和>>操作符均能进行更改。
+
+vector<int>是变长数组，它的迭代器为vector<int>::iterator
+
+我们使用u32string（Unicode32）字面量处理所有文字
