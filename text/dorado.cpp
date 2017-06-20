@@ -12,10 +12,11 @@ using namespace std;
 
 int main()
 {
-	fstream files=("1.c",std::ios::in);
-	u32stream line;
-	for(getline(file,line))
-	 cout<<line<<endl;
-
+	fstream files("a.cpp",std::ios::in);
+	string line;
+	while(getline(files,line))
+	 {
+		 cout<<line<<endl;
+	 }
 	return 0;
 }
