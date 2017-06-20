@@ -13,24 +13,44 @@
 
 using namespace std;
 
-string to_bytes(u32string _str)
+string to_bytes(u16string _str)
 {
-	wstring_convert<codecvt_utf8_utf16<char32_t>, char32_t> cvt;
+	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
 	return cvt.to_bytes(_str);
 }
 
-u32string from_bytes(string _str)
+u16string from_bytes(string _str)
 {
-	wstring_convert<codecvt_utf8_utf16<char32_t>, char32_t> cvt;
+	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
 	return cvt.from_bytes(_str);
 }
 
 int main()
-{
-	fstream files=("1.c",std::ios::in);
-	u32stream line;
-	for(getline(file,line))
-	 cout<<line<<endl;
+{  
+	fstream files("text/a.cpp",std::ios::in);
+	string line;
+	while(getline(files,line))
+	{ 
+		u16string da=from_bytes(line);
+		u16string newline=u"";
+		bool statement=true;
+		for(auto ele:da)
+		{ 
+			if(statement==true)
+			{
+				if(ele!=u' ' && ele!=u'\t')
+				{
+					statement=false;
+					newline+=ele; 
+				}
+			}
+			else
+			{
+				newline+=ele; 
+			}
+		}
+		cout<<to_bytes(newline)<<endl;
+	
+	}
 
-	return 0;
 }
