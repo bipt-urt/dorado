@@ -96,24 +96,11 @@ int checkCombination(vector<u16string>& lines)
 	{
 		if (element == u"#ifdef")
 		{
-			cout<<"hello"<<endl;
 			temStack.push(element);
 		}
-		else if(element == u"#elseif" || element == u"#else")
+		else if(element == u"#endif") 
 		{
-			if(temStack.top() == u"#ifdef" || temStack.top() == u"#elseif")
-			{
-				temStack.push(element);
-			}
-			else
-			{
-				cout<<"前面没有#idfef/#elseif与之匹配"<<endl;
-				return -1;
-			}
-		}
-		else if(element == u"#endif")
-		{
-			if(temStack.empty())
+			if (temStack.empty())
 			{
 				cout<<"没有#ifdef与之匹配"<<endl;
 				return -1;
@@ -122,11 +109,22 @@ int checkCombination(vector<u16string>& lines)
 			{
 				while(true)
 				{
-					temStack.pop();
-					if(temStack.top() == u"#ifdef")
+					if (temStack.top() == u"#ifdef")
 					{
 						temStack.pop();
 						break;
+					}
+					else
+					{
+						if (temStack.empty())
+						{
+							cout<<"没有#ifdef与之匹配"<<endl;
+							return -1;
+						}
+						else
+						{
+							temStack.pop();
+						}
 					}
 				}
 			}
@@ -135,6 +133,14 @@ int checkCombination(vector<u16string>& lines)
 		{
 			continue;
 		}
+	}
+	if(temStack.empty())
+	{
+		cout<<"匹配成功"<<endl;
+	}
+	else
+	{
+		cout<<"没#endif与之匹配"<<endl;
 	}
 	return 0;
 }
