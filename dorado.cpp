@@ -8,10 +8,10 @@
 #include <codecvt>
 #include <locale>
 #include <vector>
-#include <string>
+#include <stack>
 #include <map>
+#include <string>
 #include <algorithm>
-#include<stack>
 
 using namespace std;
 
@@ -33,7 +33,7 @@ vector<u16string> removeBlank(vector<u16string>& lines)
 	for (auto element: lines)
 	{
 		u16string var;
-		bool statement=true;
+		bool statement = true;
 		for(auto ele: element)
 		{
 			if (statement)
@@ -57,14 +57,14 @@ vector<u16string> removeBlank(vector<u16string>& lines)
 vector<u16string> preservePretreatment(vector<u16string>& lines)
 {
 	vector<u16string> newli;
-	for(auto element: lines)
+	for (auto element: lines)
 	{
 		u16string var;
-		if(element[0] == u'#')
+		if (element[0] == u'#')
 		{
-			for(auto ele:element)
+			for(auto ele: element)
 			{
-				if(ele == u'<' || ele == u' ' || ele == u'"')
+				if (ele == u'<' || ele == u' ' || ele == u'"')
 				{
 					break;
 				}
@@ -89,13 +89,13 @@ int main()
 	fstream files("test/a.cpp", std::ios::in);
 	string line;
 	vector<u16string> lines;
-	while(getline(files, line))
+	while (getline(files, line))
 	{
 		lines.push_back(from_bytes(line));
 	}
 	lines = removeBlank(lines);
 	lines = preservePretreatment(lines);
-	for(auto element: lines)
+	for (auto element: lines)
 	{
 		cout<<to_bytes(element)<<endl;
 	}
