@@ -11,6 +11,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#include<stack>
 
 using namespace std;
 
@@ -26,30 +27,92 @@ u16string from_bytes(string _str)
 	return cvt.from_bytes(_str);
 }
 
-int main()
+vector<u16string> removeblank(vector<u16string>& lines)
 {
-	fstream files("text/a.cpp",std::ios::in);
-	string line;
-	while(getline(files,line))
-	{ 
-		u16string da=from_bytes(line);
-		u16string newline=u"";
+	vector<u16string> newli;
+	for (auto element: lines)
+	{
+		u16string var;
 		bool statement=true;
-		for(auto ele:da)
-		{ 
-			if(statement==true)
+		for(auto ele: element)
+		{
+			if (statement)
 			{
-				if(ele!=u' ' && ele!=u'\t')
+				if (ele != u' ' && ele != u'\t')
 				{
-					statement=false;
-					newline+=ele; 
+					statement = false;
+					var += ele;
 				}
 			}
 			else
 			{
-				newline+=ele; 
+				var += ele;
 			}
 		}
-		cout<<to_bytes(newline)<<endl;
+		newli.push_back(var);
 	}
+	return newli;
+}
+
+vector<u16string> preservepretreatment(vector<u16string>& lines)
+{
+	vector<u16string> newli;
+	for(auto element: lines)
+	{
+		u16string var;
+		if(element[0] == u'#')
+		{
+			for(auto ele:element)
+			{
+				if(ele == u'<' || ele == u' ' || ele == u'"')
+				{
+					break;
+				}
+				else
+				{
+					var += ele;
+				}
+			}
+		}
+		else
+		{
+			break;
+		}
+		newli.push_back(var);
+	}
+	/*for(auto elea: newli)
+	{
+		for(auto ele: elea)
+		{
+			if(ele == u'<' || ele == u' ' || ele == u'"')
+			{
+				break;
+			}
+			else
+			{
+				head += ele;
+			}
+		}
+		newli.push_back(head);
+	}*/
+	return newli;
+}
+
+
+int main()
+{
+	fstream files("test/a.cpp", std::ios::in);
+	string line;
+	vector<u16string> lines;
+	while(getline(files, line))
+	{
+		lines.push_back(from_bytes(line));
+	}
+	lines = removeblank(lines);
+	lines = preservepretreatment(lines);
+	for(auto element: lines)
+	{
+		cout<<to_bytes(element)<<endl;
+	}
+	return 0;
 }

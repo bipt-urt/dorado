@@ -1,5 +1,6 @@
 #include<stdio.h>
 #define ning
+#define"stdio.h"
 int main()
 {
    #ifdef ning
