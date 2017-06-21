@@ -3,7 +3,7 @@
 #define"stdio.h"
 int main()
 {
-   #ifdef ning
+   
    printf("123");
    #else
       printf("abc");
