@@ -83,6 +83,61 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 	return newli;
 }
 
+int checkCombination(vector<u16string>& lines)
+{
+	/*vector<u16string> symbol = {
+		"#ifdef",
+		"#elseif",
+		"#else",
+		"#endif",
+	};*/
+	stack<u16string> temStack;
+	for(auto element: lines)
+	{
+		if (element == u"#ifdef")
+		{
+			cout<<"hello"<<endl;
+			temStack.push(element);
+		}
+		else if(element == u"#elseif" || element == u"#else")
+		{
+			if(temStack.top() == u"#ifdef" || temStack.top() == u"#elseif")
+			{
+				temStack.push(element);
+			}
+			else
+			{
+				cout<<"前面没有#idfef/#elseif与之匹配"<<endl;
+				return -1;
+			}
+		}
+		else if(element == u"#endif")
+		{
+			if(temStack.empty())
+			{
+				cout<<"没有#ifdef与之匹配"<<endl;
+				return -1;
+			}
+			else
+			{
+				while(true)
+				{
+					temStack.pop();
+					if(temStack.top() == u"#ifdef")
+					{
+						temStack.pop();
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			continue;
+		}
+	}
+	return 0;
+}
 
 int main()
 {
@@ -95,9 +150,6 @@ int main()
 	}
 	lines = removeBlank(lines);
 	lines = preservePretreatment(lines);
-	for (auto element: lines)
-	{
-		cout<<to_bytes(element)<<endl;
-	}
+	checkCombination(lines);
 	return 0;
 }
