@@ -83,6 +83,10 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 	return newli;
 }
 
+vector<u16string> checkCombination(vector<u16string>& lines)
+{
+
+}
 
 int main()
 {
@@ -95,9 +99,9 @@ int main()
 	}
 	lines = removeBlank(lines);
 	lines = preservePretreatment(lines);
-	for(auto element: lines)
+	/*for(auto element: lines)
 	{
 		cout<<to_bytes(element)<<endl;
-	}
+	}*/
 	return 0;
 }
