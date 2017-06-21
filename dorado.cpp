@@ -27,7 +27,7 @@ u16string from_bytes(string _str)
 	return cvt.from_bytes(_str);
 }
 
-vector<u16string> removeblank(vector<u16string>& lines)
+vector<u16string> removeBlank(vector<u16string>& lines)
 {
 	vector<u16string> newli;
 	for (auto element: lines)
@@ -54,7 +54,7 @@ vector<u16string> removeblank(vector<u16string>& lines)
 	return newli;
 }
 
-vector<u16string> preservepretreatment(vector<u16string>& lines)
+vector<u16string> preservePretreatment(vector<u16string>& lines)
 {
 	vector<u16string> newli;
 	for(auto element: lines)
@@ -76,25 +76,10 @@ vector<u16string> preservepretreatment(vector<u16string>& lines)
 		}
 		else
 		{
-			break;
+			continue;
 		}
 		newli.push_back(var);
 	}
-	/*for(auto elea: newli)
-	{
-		for(auto ele: elea)
-		{
-			if(ele == u'<' || ele == u' ' || ele == u'"')
-			{
-				break;
-			}
-			else
-			{
-				head += ele;
-			}
-		}
-		newli.push_back(head);
-	}*/
 	return newli;
 }
 
@@ -108,8 +93,8 @@ int main()
 	{
 		lines.push_back(from_bytes(line));
 	}
-	lines = removeblank(lines);
-	lines = preservepretreatment(lines);
+	lines = removeBlank(lines);
+	lines = preservePretreatment(lines);
 	for(auto element: lines)
 	{
 		cout<<to_bytes(element)<<endl;
