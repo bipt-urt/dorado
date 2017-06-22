@@ -6,9 +6,8 @@ int main()
 {//adasdad
    #ifdef ning
    printf("123");
-      printf("abc");
+      printf("abc");/aa
 /*printf("//Hello");*/
-
    #endif
    printf("\n hello,world");//ada
     return 0;
