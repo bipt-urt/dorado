@@ -86,7 +86,7 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 int checkCombination(vector<u16string>& lines)
 {
 	stack<u16string> temStack;
-	for(auto element: lines)
+	for (auto element: lines)
 	{
 		if (element == u"#ifdef")
 		{
@@ -101,7 +101,7 @@ int checkCombination(vector<u16string>& lines)
 			}
 			else
 			{
-				while(true)
+				while (true)
 				{
 					if (temStack.top() == u"#ifdef")
 					{
