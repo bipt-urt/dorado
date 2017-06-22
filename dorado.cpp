@@ -92,7 +92,7 @@ int checkCombination(vector<u16string>& lines)
 		"#endif",
 	};*/
 	stack<u16string> temStack;
-	for(auto element: lines)
+	for (auto element: lines)
 	{
 		if (element == u"#ifdef")
 		{
@@ -107,7 +107,7 @@ int checkCombination(vector<u16string>& lines)
 			}
 			else
 			{
-				while(true)
+				while (true)
 				{
 					if (temStack.top() == u"#ifdef")
 					{
@@ -134,7 +134,7 @@ int checkCombination(vector<u16string>& lines)
 			continue;
 		}
 	}
-	if(temStack.empty())
+	if (temStack.empty())
 	{
 		cout<<"匹配成功"<<endl;
 	}
