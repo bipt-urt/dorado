@@ -60,11 +60,11 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 	for (auto element: lines)
 	{
 		u16string var;
-		if (element[0] == u'#')
+		if(element[0] == u'#')
 		{
-			for(auto ele: element)
+			for (auto ele: element)
 			{
-				if (ele == u'<' || ele == u' ' || ele == u'"')
+				if (ele == u'<' || ele == u'"' || ele == u' ')
 				{
 					break;
 				}
@@ -74,12 +74,9 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 				}
 			}
 		}
-		else
-		{
-			continue;
-		}
 		newli.push_back(var);
 	}
+	
 	return newli;
 }
 //检查＃ifdef和#endif是否匹配
@@ -96,7 +93,7 @@ int checkCombination(vector<u16string>& lines)
 		{
 			if (temStack.empty())
 			{
-				cout<<"没有#ifdef与之匹配"<<endl;
+				cout<<"没有#ifdef与之匹配a"<<endl;
 				return -1;
 			}
 			else
@@ -130,7 +127,7 @@ int checkCombination(vector<u16string>& lines)
 	}
 	if (temStack.empty())
 	{
-		cout<<"匹配成功"<<endl;
+		return 0;
 	}
 	else
 	{
@@ -141,42 +138,92 @@ int checkCombination(vector<u16string>& lines)
 //检查＃include是否都展开了
 int checkTheInclude(vector<u16string>& combination)
 {
-	int count = 0;
+	int number = 0;
 	for (auto element: combination)
 	{
 		if (element == u"#include")
-			{
-				count++;
-				return count;
-			}
+		{
+			number++;
+			return number;
+		}
 		else
 		{
-			count++;
+			number++;
 		}	
 	}
-	count = 0;
-	return count;
+	number = 0;
+	return number;
 }
 
+vector<u16string> findHeadName(vector<u16string>& lines, int count)
+{
+	int findcount = 0;
+	vector<u16string> vec;
+	u16string u16;
+	int statement=1;
+	for (auto element: lines)
+	{
+		if (findcount == count-1)
+		{
+			for (auto ele: element)
+			{
+				if (ele == u'<' || ele == u'"')
+				{
+					statement=2;
+				}
+				if (statement == 2)
+				{
+					if (ele == u'<' || ele == u'"' || ele == u'>')
+					{
+						continue;
+					}
+					else
+					{
+						u16+=ele;	
+					}
+				}
+			}
+			vec.push_back(u16);
+			break;
+		}
+		else
+		{
+			findcount++;
+		}
+	}
+	return vec;
+}
 //　展开include文件
-vector<u16string> openInclude(vector<u16string>& lines, vector<u16string>& vecHead)
+vector<u16string> openInclude(vector<u16string>& lines)
 {
 	vector<u16string> combination;
-	int count=1;
+	vector<u16string> headName;
+	u16string header;
+	int count = 1;
 	int number;
-	//u16string temString;
 	combination = preservePretreatment(lines);
-	//count = checkTheInclude(combination);
-	//cout<<count<<endl;
 	while (count != 0)
 	{
 		count = checkTheInclude(combination);
 		if (count != 0)
 		{
 			number = count;
-			combination.erase(combination.begin()+count - 1);
-			//lines.erase(lines.begin()+count - 1);
-			for(auto element: vecHead)
+			headName = findHeadName(lines,count);
+			for (auto element: headName)
+			{
+				for (auto ele: element)
+				{
+					header += ele;
+				}
+			}
+			fstream headfile("include/"+to_bytes(header), std::ios::in);
+			string line;
+			while(getline(headfile,line))
+			{
+				cout<<line<<endl;
+			}
+			combination.erase(combination.begin()+count-1);
+			/*for (auto element: vecHead)
 			{
 				lines.insert(lines.begin()+number+1, element);
 				number++;
@@ -185,7 +232,7 @@ vector<u16string> openInclude(vector<u16string>& lines, vector<u16string>& vecHe
 			for (auto element: lines)
 			{
 				cout<<to_bytes(element)<<endl;
-			}
+			}*/
 		}
 		
 	}
@@ -195,22 +242,14 @@ vector<u16string> openInclude(vector<u16string>& lines, vector<u16string>& vecHe
 int main()
 {
 	fstream files("test/a.cpp", std::ios::in);
-	fstream headerfile("include/stdio.h", std::ios::in);
 	string line;
-	string header;
 	vector<u16string> lines;
-	vector<u16string> vecHead;
-	while (getline(headerfile, header))
-	{
-		vecHead.push_back(from_bytes(header));
-	}
 	while (getline(files, line))
 	{
 		lines.push_back(from_bytes(line));
 	}
 	lines = removeBlank(lines);
-	vecHead = openInclude(lines,vecHead);
-	//lines = preservePretreatment(lines);
-	//checkCombination(lines);
+	lines = openInclude(lines);
+	checkCombination(lines);
 	return 0;
 }
