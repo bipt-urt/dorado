@@ -3,12 +3,14 @@
 #define"stdio.h"
 #include<stdio.h>//a
 int main()
-{//adasdad
+{adasdad
    #ifdef ning
    printf("123");
       printf("abc");/aa
 /*printf("//Hello");*/
-   #endif
-   printf("\n hello,world");//ada
+
+/*      printf("abc");
+printf("//Hello");
+*/
     return 0;
 }
