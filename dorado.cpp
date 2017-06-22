@@ -147,13 +147,14 @@ int checkTheInclude(vector<u16string>& combination)
 		if (element == u"#include")
 			{
 				count++;
-				break;
+				return count;
 			}
 		else
 		{
 			count++;
-		}
+		}	
 	}
+	count = 0;
 	return count;
 }
 
@@ -162,6 +163,7 @@ vector<u16string> openInclude(vector<u16string>& lines, vector<u16string>& vecHe
 {
 	vector<u16string> combination;
 	int count=1;
+	int number;
 	//u16string temString;
 	combination = preservePretreatment(lines);
 	//count = checkTheInclude(combination);
@@ -169,8 +171,23 @@ vector<u16string> openInclude(vector<u16string>& lines, vector<u16string>& vecHe
 	while (count != 0)
 	{
 		count = checkTheInclude(combination);
-		lines.erase(lines.begin()+count-1);
-		cout<<count<<endl;
+		if (count != 0)
+		{
+			number = count;
+			combination.erase(combination.begin()+count - 1);
+			//lines.erase(lines.begin()+count - 1);
+			for(auto element: vecHead)
+			{
+				lines.insert(lines.begin()+number+1, element);
+				number++;
+			}
+			lines.erase(lines.begin()+count);
+			for (auto element: lines)
+			{
+				cout<<to_bytes(element)<<endl;
+			}
+		}
+		
 	}
 	return combination;
 }
