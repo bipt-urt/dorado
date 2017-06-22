@@ -15,7 +15,6 @@
 
 using namespace std;
 
-vector<u16string> removeExplabationSecond(vector<u16string>& lines);
 
 string to_bytes(u16string _str)
 {
@@ -32,10 +31,10 @@ u16string from_bytes(string _str)
 // 去掉空格
 vector<u16string> removeBlank(vector<u16string>& lines)
 {
-	vector<u16string> newli;
+	vector<u16string> removeBlankSourceFile;
 	for (auto element: lines)
 	{
-		u16string var;
+		u16string saveRemoveBlankRow;
 		bool statement = true;
 		for (auto ele: element)
 		{
@@ -44,26 +43,26 @@ vector<u16string> removeBlank(vector<u16string>& lines)
 				if (ele != u' ' && ele != u'\t')
 				{
 					statement = false;
-					var += ele;
+					saveRemoveBlankRow += ele;
 				}
 			}
 			else
 			{
-				var += ele;
+				saveRemoveBlankRow += ele;
 			}
 		}
-		newli.push_back(var);
+		removeBlankSourceFile.push_back(saveRemoveBlankRow);
 	}
-	return newli;
+	return removeBlankSourceFile;
 }
 
 // 提取＃开头的函数
-vector<u16string> preservePretreatment(vector<u16string>& lines)
+vector<u16string> getIsSharpRow(vector<u16string>& lines)
 {
-	vector<u16string> newli;
+	vector<u16string> saveHaveSharpRow;
 	for (auto element: lines)
 	{
-		u16string var;
+		u16string saveSharpLow;
 		if(element[0] == u'#')
 		{
 			for (auto ele: element)
@@ -74,51 +73,51 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 				}
 				else
 				{
-					var += ele;
+					saveSharpLow += ele;
 				}
 			}
 		}
-		newli.push_back(var);
+		saveHaveSharpRow.push_back(saveSharpLow);
 	}
-	return newli;
+	return saveHaveSharpRow;
 }
 
 // 检查＃ifdef和#endif是否匹配
-int checkCombination(vector<u16string>& lines)
+bool isMatching(vector<u16string>& lines)
 {
-	stack<u16string> temStack;
+	stack<u16string> isMatchingStack;
 	for (auto element: lines)
 	{
 		if (element == u"#ifdef")
 		{
-			temStack.push(element);
+			isMatchingStack.push(element);
 		}
 		else if(element == u"#endif") 
 		{
-			if (temStack.empty())
+			if (isMatchingStack.empty())
 			{
 				cout<<"没有#ifdef与之匹配a"<<endl;
-				return -1;
+				return false;
 			}
 			else
 			{
 				while (true)
 				{
-					if (temStack.top() == u"#ifdef")
+					if (isMatchingStack.top() == u"#ifdef")
 					{
-						temStack.pop();
+						isMatchingStack.pop();
 						break;
 					}
 					else
 					{
-						if (temStack.empty())
+						if (isMatchingStack.empty())
 						{
 							cout<<"没有#ifdef与之匹配"<<endl;
-							return -1;
+							return false;
 						}
 						else
 						{
-							temStack.pop();
+							isMatchingStack.pop();
 						}
 					}
 				}
@@ -129,47 +128,47 @@ int checkCombination(vector<u16string>& lines)
 			continue;
 		}
 	}
-	if (temStack.empty())
+	if (isMatchingStack.empty())
 	{
-		return 0;
+		return true;
 	}
 	else
 	{
 		cout<<"没#endif与之匹配"<<endl;
 	}
-	return 0;
+	return true;
 }
 
 // 检查＃include是否都展开了
 int checkTheInclude(vector<u16string>& combination)
 {
-	int number = 0;
+	int toCount = 0;
 	for (auto element: combination)
 	{
 		if (element == u"#include")
 		{
-			number++;
-			return number;
+			toCount++;
+			return toCount;
 		}
 		else
 		{
-			number++;
+			toCount++;
 		}	
 	}
-	number = 0;
-	return number;
+	toCount = 0;
+	return toCount;
 }
 
-// 找头文件
-vector<u16string> findHeadName(vector<u16string>& lines, int count)
+// 找头文件的名子
+vector<u16string> findgetHeaderFileName(vector<u16string>& lines, int getIncludeRowtoCount)
 {
-	int findcount = 0;
+	int findgetIncludeRowtoCount = 0;
 	vector<u16string> vec;
 	u16string u16;
 	int statement=1;
 	for (auto element: lines)
 	{
-		if (findcount == count-1)
+		if (findgetIncludeRowtoCount == getIncludeRowtoCount-1)
 		{
 			for (auto ele: element)
 			{
@@ -194,30 +193,30 @@ vector<u16string> findHeadName(vector<u16string>& lines, int count)
 		}
 		else
 		{
-			findcount++;
+			findgetIncludeRowtoCount++;
 		}
 	}
 	return vec;
 }
 
 // 展开include文件
-vector<u16string> openInclude(vector<u16string>& lines)
+vector<u16string> expansionIncludeFile(vector<u16string>& lines)
 {
-	vector<u16string> combination;
-	vector<u16string> headName;
-	int count = 1;
-	int number;
-	combination = preservePretreatment(lines);
-	checkCombination(combination);
-	while (count != 0)
+	vector<u16string> isHaveInclude;
+	vector<u16string> getHeaderFileName;
+	int getIncludeRowtoCount = 1; // 获取include行数
+	int toCount;// 让头文件按顺序插入源文件中
+	isHaveInclude = getIsSharpRow(lines);
+	isMatching(isHaveInclude);
+	while (getIncludeRowtoCount != 0)
 	{
 		u16string header;
-		count = checkTheInclude(combination);
-		if (count != 0)
+		getIncludeRowtoCount = checkTheInclude(isHaveInclude);
+		if (getIncludeRowtoCount != 0)
 		{
-			number = count;
-			headName = findHeadName(lines,count);
-			for (auto element: headName)
+			toCount = getIncludeRowtoCount;
+			getHeaderFileName = findgetHeaderFileName(lines,getIncludeRowtoCount);
+			for (auto element: getHeaderFileName)
 			{
 				for (auto ele: element)
 				{
@@ -236,111 +235,120 @@ vector<u16string> openInclude(vector<u16string>& lines)
 			{
 				vecHead.push_back(from_bytes(line));
 			}
-			combination.erase(combination.begin()+count-1);
+			isHaveInclude.erase(isHaveInclude.begin()+getIncludeRowtoCount-1);
 			for (auto element: vecHead)
 			{
-				lines.insert(lines.begin()+number, element);
-				number++;
+				lines.insert(lines.begin()+toCount, element);
+				toCount++;
 			}
-			lines.erase(lines.begin()+count-1);
-			combination = preservePretreatment(lines);
+			lines.erase(lines.begin()+getIncludeRowtoCount-1);
+			isHaveInclude = getIsSharpRow(lines);
 		}
 		
 	}
 	return lines;
 }
 
-vector<u16string> removeExplabation(vector<u16string>& lines)
+// 删掉(注释)//后面的内容
+vector<u16string> secondToRemoveExplabation(vector<u16string>& lines)
 {
 	vector<u16string> vec;
-	int statement=0;
 	for (auto element: lines)
 	{
-		u16string tem;
+		u16string saveRemoveExplabationRow;
 		for (auto ele:element)
 		{
 			if (ele != u'/')
 			{
-				tem += ele;
+				saveRemoveExplabationRow += ele;
 			}
 			else
 			{
-				if (element[tem.size()-1] != u'"' && element[tem.size()+1] == u'/')
+				if (element[saveRemoveExplabationRow.size()-1] != u'"' && element[saveRemoveExplabationRow.size()+1] == u'/')
 				{
 					break;
 				}
-				else if(element[tem.size()-1] != u'"' && element[tem.size()+1] != u'/' && element[tem.size()-1] != u'/')
+				else if(element[saveRemoveExplabationRow.size()-1] != u'"' && element[saveRemoveExplabationRow.size()+1] != u'/' && element[saveRemoveExplabationRow.size()-1] != u'/')
 				{
-					if (element[tem.size()+1] != u'*')
+					if (element[saveRemoveExplabationRow.size()+1] != u'*')
 					{
 					cout<<"程序有错"<<endl;
-					tem += ele;
+					saveRemoveExplabationRow += ele;
 					continue;
 					}
 				}
 				else
 				{
-					tem += ele;
+					saveRemoveExplabationRow += ele;
 				}
 			}
 		}
-		vec.push_back(tem);
+		vec.push_back(saveRemoveExplabationRow);
 	}
 	return vec;
 }
 
-vector<u16string> removeExplabationSecond(vector<u16string>& lines)
+// 去掉/*到*/之间的内容
+vector<u16string> removeExplabation(vector<u16string>& lines)
 {
-	vector<u16string> vecSecond;
-	int statement = 1;
+	vector<u16string> saveRemoveExplabationFile;
+	int statement = 1;// 自动机,1表示没遇到/*,2表示已经遇到/*;3表示遇到*/
 	for (auto element: lines)
 	{
-		u16string temp;
+		u16string saveRemoveExplabationRow;
 		for (auto ele: element)
 		{
 			if (statement == 1)
 			{
-				if (ele == u'/' && element[temp.size()+1] == u'*')
+				if (ele == u'/' && element[saveRemoveExplabationRow.size()+1] == u'*')
 				{
 					statement = 2;
 					continue;
 				}
 				else
 				{
-					temp += ele;
+					saveRemoveExplabationRow += ele;
 				}
 			}
-			else if(statement == 2)
+			else if(statement == 2 || statement == 3)
 			{
 				if (ele == u'*')
 				{
+					statement = 3;
 					continue;
 				}
-				else if(ele == u'/')
+				else if(statement == 3)
 				{
+					if (ele == u'/')
+					{
 					statement = 1;
+					}
+					else
+					{
+						statement = 2;
+					}
 				}
 			}
 		}
-		vecSecond.push_back(temp);
+		saveRemoveExplabationFile.push_back(saveRemoveExplabationRow);
 	}
-	vecSecond = removeExplabation(vecSecond);
-	return vecSecond;
+	saveRemoveExplabationFile = secondToRemoveExplabation(saveRemoveExplabationFile);
+	return saveRemoveExplabationFile;
 }
 
 int main()
 {
-	fstream files("test/a.cpp", std::ios::in);
-	string line;
+	fstream getSourceFile("test/a.cpp", std::ios::in);
+	string getSourceFileEachRow;
 	vector<u16string> lines;
-	while (getline(files, line))
+	while (getline(getSourceFile, getSourceFileEachRow))
 	{
-		lines.push_back(from_bytes(line));
+		lines.push_back(from_bytes(getSourceFileEachRow));
 	}
 	lines = removeBlank(lines);
-	lines = removeExplabationSecond(lines);
-	lines = openInclude(lines);
-	lines = removeExplabationSecond(lines);
+	lines = removeExplabation(lines);
+	lines = expansionIncludeFile(lines);
+	lines = removeExplabation(lines);
 	for (auto element: lines)
 	{
 		cout<<to_bytes(element)<<endl;
