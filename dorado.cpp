@@ -14,7 +14,7 @@
 #include <algorithm>
 
 using namespace std;
-
+vector<u16string> removeExplabationSecond(vector<u16string>& lines);
 string to_bytes(u16string _str)
 {
 	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
@@ -34,7 +34,7 @@ vector<u16string> removeBlank(vector<u16string>& lines)
 	{
 		u16string var;
 		bool statement = true;
-		for(auto ele: element)
+		for (auto ele: element)
 		{
 			if (statement)
 			{
@@ -201,6 +201,7 @@ vector<u16string> openInclude(vector<u16string>& lines)
 	int count = 1;
 	int number;
 	combination = preservePretreatment(lines);
+	checkCombination(combination);
 	while (count != 0)
 	{
 		u16string header;
@@ -234,11 +235,85 @@ vector<u16string> openInclude(vector<u16string>& lines)
 		}
 		
 	}
+	return lines;
+}
+
+vector<u16string> removeExplabation(vector<u16string>& lines)
+{
+	vector<u16string> vec;
+	int statement=0;
 	for (auto element: lines)
 	{
-		cout<<to_bytes(element)<<endl;
+		u16string tem;
+		for (auto ele:element)
+		{
+			if (ele != u'/')
+			{
+				tem += ele;
+			}
+			else
+			{
+				if (element[tem.size()-1] != u'"' && element[tem.size()+1] == u'/')
+				{
+					break;
+				}
+				else if(element[tem.size()-1] != u'"' && element[tem.size()+1] != u'/' && element[tem.size()-1] != u'/')
+				{
+					if (element[tem.size()+1] != u'*')
+					{
+					cout<<"程序有错"<<endl;
+					tem += ele;
+					continue;
+					}
+				}
+				else
+				{
+					tem += ele;
+				}
+			}
+		}
+		vec.push_back(tem);
 	}
-	return combination;
+	return vec;
+}
+
+vector<u16string> removeExplabationSecond(vector<u16string>& lines)
+{
+	vector<u16string> vecSecond;
+	int statement = 1;
+	for (auto element: lines)
+	{
+		u16string temp;
+		for (auto ele: element)
+		{
+			if (statement == 1)
+			{
+				if (ele == u'/' && element[temp.size()+1] == u'*')
+				{
+					statement = 2;
+					continue;
+				}
+				else
+				{
+					temp += ele;
+				}
+			}
+			else if(statement == 2)
+			{
+				if (ele == u'*')
+				{
+					continue;
+				}
+				else if(ele == u'/')
+				{
+					statement = 1;
+				}
+			}
+		}
+		vecSecond.push_back(temp);
+	}
+	vecSecond = removeExplabation(vecSecond);
+	return vecSecond;
 }
 
 int main()
@@ -251,7 +326,12 @@ int main()
 		lines.push_back(from_bytes(line));
 	}
 	lines = removeBlank(lines);
+	lines = removeExplabationSecond(lines);
 	lines = openInclude(lines);
-	checkCombination(lines);
+	lines = removeExplabationSecond(lines);
+	for (auto element: lines)
+	{
+		cout<<to_bytes(element)<<endl;
+	}
 	return 0;
 }
