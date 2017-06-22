@@ -26,7 +26,7 @@ u16string from_bytes(string _str)
 	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
 	return cvt.from_bytes(_str);
 }
-
+//去掉空格
 vector<u16string> removeBlank(vector<u16string>& lines)
 {
 	vector<u16string> newli;
@@ -53,7 +53,7 @@ vector<u16string> removeBlank(vector<u16string>& lines)
 	}
 	return newli;
 }
-
+//提取＃开头的函数
 vector<u16string> preservePretreatment(vector<u16string>& lines)
 {
 	vector<u16string> newli;
@@ -82,15 +82,9 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 	}
 	return newli;
 }
-
+//检查＃ifdef和#endif是否匹配
 int checkCombination(vector<u16string>& lines)
 {
-	/*vector<u16string> symbol = {
-		"#ifdef",
-		"#elseif",
-		"#else",
-		"#endif",
-	};*/
 	stack<u16string> temStack;
 	for(auto element: lines)
 	{
@@ -134,7 +128,7 @@ int checkCombination(vector<u16string>& lines)
 			continue;
 		}
 	}
-	if(temStack.empty())
+	if (temStack.empty())
 	{
 		cout<<"匹配成功"<<endl;
 	}
@@ -144,18 +138,62 @@ int checkCombination(vector<u16string>& lines)
 	}
 	return 0;
 }
+//检查＃include是否都展开了
+int checkTheInclude(vector<u16string>& combination)
+{
+	int count = 0;
+	for (auto element: combination)
+	{
+		if (element == u"#include")
+			{
+				count++;
+				break;
+			}
+		else
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
+//　展开include文件
+vector<u16string> openInclude(vector<u16string>& lines, vector<u16string>& vecHead)
+{
+	vector<u16string> combination;
+	int count=1;
+	//u16string temString;
+	combination = preservePretreatment(lines);
+	//count = checkTheInclude(combination);
+	//cout<<count<<endl;
+	while (count != 0)
+	{
+		count = checkTheInclude(combination);
+		lines.erase(lines.begin()+count-1);
+		cout<<count<<endl;
+	}
+	return combination;
+}
 
 int main()
 {
 	fstream files("test/a.cpp", std::ios::in);
+	fstream headerfile("include/stdio.h", std::ios::in);
 	string line;
+	string header;
 	vector<u16string> lines;
+	vector<u16string> vecHead;
+	while (getline(headerfile, header))
+	{
+		vecHead.push_back(from_bytes(header));
+	}
 	while (getline(files, line))
 	{
 		lines.push_back(from_bytes(line));
 	}
 	lines = removeBlank(lines);
-	lines = preservePretreatment(lines);
-	checkCombination(lines);
+	vecHead = openInclude(lines,vecHead);
+	//lines = preservePretreatment(lines);
+	//checkCombination(lines);
 	return 0;
 }
