@@ -154,7 +154,7 @@ int checkTheInclude(vector<u16string>& combination)
 	number = 0;
 	return number;
 }
-
+//找头文件
 vector<u16string> findHeadName(vector<u16string>& lines, int count)
 {
 	int findcount = 0;
@@ -198,12 +198,12 @@ vector<u16string> openInclude(vector<u16string>& lines)
 {
 	vector<u16string> combination;
 	vector<u16string> headName;
-	u16string header;
 	int count = 1;
 	int number;
 	combination = preservePretreatment(lines);
 	while (count != 0)
 	{
+		u16string header;
 		count = checkTheInclude(combination);
 		if (count != 0)
 		{
@@ -218,23 +218,25 @@ vector<u16string> openInclude(vector<u16string>& lines)
 			}
 			fstream headfile("include/"+to_bytes(header), std::ios::in);
 			string line;
-			while(getline(headfile,line))
+			vector<u16string> vecHead;
+			while (getline(headfile, line))
 			{
-				cout<<line<<endl;
+				vecHead.push_back(from_bytes(line));
 			}
 			combination.erase(combination.begin()+count-1);
-			/*for (auto element: vecHead)
+			for (auto element: vecHead)
 			{
-				lines.insert(lines.begin()+number+1, element);
+				lines.insert(lines.begin()+number, element);
 				number++;
 			}
-			lines.erase(lines.begin()+count);
-			for (auto element: lines)
-			{
-				cout<<to_bytes(element)<<endl;
-			}*/
+			lines.erase(lines.begin()+count-1);
+			combination = preservePretreatment(lines);
 		}
 		
+	}
+	for (auto element: lines)
+	{
+		cout<<to_bytes(element)<<endl;
 	}
 	return combination;
 }
