@@ -14,7 +14,9 @@
 #include <algorithm>
 
 using namespace std;
+
 vector<u16string> removeExplabationSecond(vector<u16string>& lines);
+
 string to_bytes(u16string _str)
 {
 	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
@@ -26,7 +28,8 @@ u16string from_bytes(string _str)
 	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
 	return cvt.from_bytes(_str);
 }
-//去掉空格
+
+// 去掉空格
 vector<u16string> removeBlank(vector<u16string>& lines)
 {
 	vector<u16string> newli;
@@ -53,7 +56,8 @@ vector<u16string> removeBlank(vector<u16string>& lines)
 	}
 	return newli;
 }
-//提取＃开头的函数
+
+// 提取＃开头的函数
 vector<u16string> preservePretreatment(vector<u16string>& lines)
 {
 	vector<u16string> newli;
@@ -76,10 +80,10 @@ vector<u16string> preservePretreatment(vector<u16string>& lines)
 		}
 		newli.push_back(var);
 	}
-	
 	return newli;
 }
-//检查＃ifdef和#endif是否匹配
+
+// 检查＃ifdef和#endif是否匹配
 int checkCombination(vector<u16string>& lines)
 {
 	stack<u16string> temStack;
@@ -135,7 +139,8 @@ int checkCombination(vector<u16string>& lines)
 	}
 	return 0;
 }
-//检查＃include是否都展开了
+
+// 检查＃include是否都展开了
 int checkTheInclude(vector<u16string>& combination)
 {
 	int number = 0;
@@ -154,7 +159,8 @@ int checkTheInclude(vector<u16string>& combination)
 	number = 0;
 	return number;
 }
-//找头文件
+
+// 找头文件
 vector<u16string> findHeadName(vector<u16string>& lines, int count)
 {
 	int findcount = 0;
@@ -193,7 +199,8 @@ vector<u16string> findHeadName(vector<u16string>& lines, int count)
 	}
 	return vec;
 }
-//　展开include文件
+
+// 展开include文件
 vector<u16string> openInclude(vector<u16string>& lines)
 {
 	vector<u16string> combination;
@@ -217,7 +224,12 @@ vector<u16string> openInclude(vector<u16string>& lines)
 					header += ele;
 				}
 			}
-			fstream headfile("include/"+to_bytes(header), std::ios::in);
+			string fileName = to_bytes(header);
+			if (fileName[0] != '/')
+			{
+				fileName = "include/" + fileName;
+			}
+			fstream headfile(fileName, std::ios::in);
 			string line;
 			vector<u16string> vecHead;
 			while (getline(headfile, line))
