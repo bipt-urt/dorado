@@ -101,26 +101,7 @@ bool isMatching(vector<u16string>& lines)
 			}
 			else
 			{
-				while (true)
-				{
-					if (isMatchingStack.top() == u"#ifdef")
-					{
-						isMatchingStack.pop();
-						break;
-					}
-					else
-					{
-						if (isMatchingStack.empty())
-						{
-							cout<<"没有#ifdef与之匹配"<<endl;
-							return false;
-						}
-						else
-						{
-							isMatchingStack.pop();
-						}
-					}
-				}
+				isMatchingStack.pop();
 			}
 		}
 		else
@@ -207,7 +188,7 @@ vector<u16string> expansionIncludeFile(vector<u16string>& lines)
 	int getIncludeRowtoCount = 1; // 获取include行数
 	int toCount;// 让头文件按顺序插入源文件中
 	isHaveInclude = getIsSharpRow(lines);
-	isMatching(isHaveInclude);
+	//isMatching(isHaveInclude);
 	while (getIncludeRowtoCount != 0)
 	{
 		u16string header;
@@ -292,7 +273,10 @@ vector<u16string> secondToRemoveExplabation(vector<u16string>& lines)
 vector<u16string> removeExplabation(vector<u16string>& lines)
 {
 	vector<u16string> saveRemoveExplabationFile;
+	vector<u16string> isHaveInclude;
 	int statement = 1;// 自动机,1表示没遇到/*,2表示已经遇到/*;3表示遇到*/
+	isHaveInclude = getIsSharpRow(lines);
+	isMatching(isHaveInclude);
 	for (auto element: lines)
 	{
 		u16string saveRemoveExplabationRow;
@@ -336,6 +320,45 @@ vector<u16string> removeExplabation(vector<u16string>& lines)
 	return saveRemoveExplabationFile;
 }
 
+// 获取#define的行数
+int getDefineRow(vector<u16string>& lines)
+{
+	int getRow = 1;
+	for (auto element: lines)
+	{
+		if (element == u"#define")
+		{
+			return getRow;
+			break;
+		}
+		else
+		{
+			getRow++;
+		}
+	}
+	getRow = 0;
+	return getRow;
+}
+
+// 判断#ifdef上下文的关系
+vector<u16string> isRelation(vector<u16string>& lines)
+{
+	vector<u16string> getRemoveRelationFile;
+	vector<u16string> IsDefine;
+	vector<u16string> sava;
+	int getRow=0;
+	IsDefine = getIsSharpRow(lines);
+	for (auto element: lines)
+	{
+		getRow=getDefineRow(IsDefine);
+		while (getRow != 0)
+		{
+
+		}
+	}
+	return getRemoveRelationFile;
+}
+
 int main()
 {
 	fstream getSourceFile("test/a.cpp", std::ios::in);
@@ -347,6 +370,7 @@ int main()
 	}
 	lines = removeBlank(lines);
 	lines = removeExplabation(lines);
+
 	lines = expansionIncludeFile(lines);
 	lines = removeExplabation(lines);
 	for (auto element: lines)
