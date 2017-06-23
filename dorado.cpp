@@ -64,7 +64,7 @@ vector<u16string> getIsSharpRow(vector<u16string>& lines)
 	for (auto element: lines)
 	{
 		u16string saveSharpLow;
-		if(element[0] == u'#')
+		if (element[0] == u'#')
 		{
 			for (auto ele: element)
 			{
@@ -147,7 +147,7 @@ vector<u16string> findgetHeaderFileName(vector<u16string>& lines, int getInclude
 	int findGetIncludeRowtoCount = 0;
 	vector<u16string> vec;
 	u16string u16;
-	int statement=1;
+	int statement = 1;
 	for (auto element: lines)
 	{
 		if (findGetIncludeRowtoCount == getIncludeRowtoCount-1)
@@ -156,7 +156,7 @@ vector<u16string> findgetHeaderFileName(vector<u16string>& lines, int getInclude
 			{
 				if (ele == u'<' || ele == u'"')
 				{
-					statement=2;
+					statement = 2;
 				}
 				if (statement == 2)
 				{
@@ -166,7 +166,7 @@ vector<u16string> findgetHeaderFileName(vector<u16string>& lines, int getInclude
 					}
 					else
 					{
-						u16+=ele;	
+						u16 += ele;	
 					}
 				}
 			}
@@ -353,7 +353,7 @@ void getRelationContent(vector<u16string>& lines)
 		for (auto element: lines)
 		{
 			
-			int statement=1;
+			int statement = 1;
 			if (getLinesRow == getRow)
 			{
 				for (auto ele:element)
@@ -362,7 +362,7 @@ void getRelationContent(vector<u16string>& lines)
 					{
 						if (ele == u' ')
 						{
-							statement=2;
+							statement = 2;
 							continue;
 						}
 						else
@@ -454,7 +454,7 @@ vector<u16string> isRelation(vector<u16string>& lines)
 	tofineDefineRow = getFirstDefineRow(lines);
 	while (tofineDefineRow != 0)
 	{
-		if(tofineDefineRow == 1)
+		if (tofineDefineRow == 1)
 		{
 			saveRelationRow = dealDefineContent(lines);
 			break;
