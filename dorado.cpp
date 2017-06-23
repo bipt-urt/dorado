@@ -347,8 +347,8 @@ void getRelationContent(vector<u16string>& lines)
 {
 	int getRow;
 	int getLinesRow;
+	u16string saveDefineContent = u"";
 	getRow = toFindDefineRow(lines);
-	u16string saveDefineContent;
 	if (getRow != 0)
 	{
 		for (auto element: lines)
@@ -382,6 +382,7 @@ void getRelationContent(vector<u16string>& lines)
 						}
 					}
 				}
+				greatFindDefine(saveDefineContent, 1);
 				break;
 			}
 			else
@@ -389,8 +390,6 @@ void getRelationContent(vector<u16string>& lines)
 				getLinesRow++;
 			}
 		}
-	//	cout<<to_bytes(saveDefineContent)<<"l"<<endl;
-		greatFindDefine(saveDefineContent, 1);
 	}
 }
 

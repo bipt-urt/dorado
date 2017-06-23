@@ -1,5 +1,5 @@
 
-#define nin
+#define 876
 #define sds
 #define sfmd
 #include<stdio.h>//a
