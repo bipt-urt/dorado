@@ -354,9 +354,7 @@ void getRelationContent(vector<u16string>& lines)
 		for (auto element: lines)
 		{
 			int statement = 1;
-			if (getLinesRow == getRow - 1)		
-			int statement = 1;
-			if (getLinesRow == getRow)
+			if (getLinesRow == getRow - 1)
 			{
 				for (auto ele: element)
 				{
@@ -390,9 +388,7 @@ void getRelationContent(vector<u16string>& lines)
 			{
 				getLinesRow++;
 			}
-			//cout<<"%"<<saveDefineContent.size()<<endl;
 		}
-		//cout<<"$"<<saveDefineContent.size()<<"$"<<to_bytes(saveDefineContent)<<endl;
 		greatFindDefine(saveDefineContent, 1);
 	}
 }
@@ -401,7 +397,6 @@ void getRelationContent(vector<u16string>& lines)
 int greatFindDefine(u16string u16, int statement)
 {
 	unordered_set<u16string> findIsDefine;
-	cout<<u16.size()<<"@"<<to_bytes(u16)<<endl;
 	if (statement == 1)
 	{
 		findIsDefine.insert(u16);
