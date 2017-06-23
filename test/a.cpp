@@ -1,10 +1,11 @@
 
 #define nin
-
+#define sds
+#define sfmd
 #include<stdio.h>//a
 int main()
 {//adasdad
- // #define ning
+  #define ning
    
 	#ifndef nin
    printf("123");

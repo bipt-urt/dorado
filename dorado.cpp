@@ -16,6 +16,7 @@
 
 using namespace std;
 
+int greatFindDefine(u16string u16, int statement);
 
 string to_bytes(u16string _str)
 {
@@ -348,21 +349,20 @@ void getRelationContent(vector<u16string>& lines)
 	int getLinesRow;
 	getRow = toFindDefineRow(lines);
 	u16string saveDefineContent;
-	if(getRow != 0)
+	if (getRow != 0)
 	{
 		for (auto element: lines)
 		{
-			
-			int statement=1;
-			if (getLinesRow == getRow)
+			int statement = 1;
+			if (getLinesRow == getRow - 1)
 			{
-				for (auto ele:element)
+				for (auto ele: element)
 				{
 					if (statement == 1)
 					{
 						if (ele == u' ')
 						{
-							statement=2;
+							statement = 2;
 							continue;
 						}
 						else
@@ -381,7 +381,6 @@ void getRelationContent(vector<u16string>& lines)
 							continue;
 						}
 					}
-					
 				}
 				break;
 			}
@@ -389,8 +388,36 @@ void getRelationContent(vector<u16string>& lines)
 			{
 				getLinesRow++;
 			}
+			//cout<<"%"<<saveDefineContent.size()<<endl;
 		}
-		cout<<to_bytes(saveDefineContent)<<endl;
+		//cout<<"$"<<saveDefineContent.size()<<"$"<<to_bytes(saveDefineContent)<<endl;
+		greatFindDefine(saveDefineContent, 1);
+	}
+}
+
+
+int greatFindDefine(u16string u16, int statement)
+{
+	unordered_set<u16string> findIsDefine;
+	cout<<u16.size()<<"@"<<to_bytes(u16)<<endl;
+	if (statement == 1)
+	{
+		findIsDefine.insert(u16);
+	}
+	else if(statement == 2)
+	{
+		/*if(search != example.end()) 
+		{
+	
+		}
+		else
+		{
+			std::cout << "Not found\n";
+		}*/
+	}
+	for(auto ele:findIsDefine)
+	{
+		cout<<to_bytes(ele)<<"sefrf"<<endl;
 	}
 }
 
@@ -406,7 +433,8 @@ vector<u16string> dealDefineContent(vector<u16string>& lines)
 		if (getLinesRow == getDefineRow)
 		{
 			getRelationContent(lines);
-			lines.erase(lines.begin()+getLinesRow);
+			//element.erase(lines.begin()+getLinesRow);
+			getLinesRow ++;
 		}
 		else
 		{
@@ -477,9 +505,9 @@ int main()
 	lines = expansionIncludeFile(lines);
 	lines = removeExplabation(lines);
 	lines = isRelation(lines);
-	for (auto element: lines)
+	/*for (auto element: lines)
 	{
 		cout<<to_bytes(element)<<endl;
-	}
+	}*/
 	return 0;
 }
