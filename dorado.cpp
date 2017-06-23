@@ -389,6 +389,7 @@ void getRelationContent(vector<u16string>& lines)
 				getLinesRow++;
 			}
 		}
+		//cout<<to_bytes(saveDefineContent)<<"l"<<endl;
 		greatFindDefine(saveDefineContent, 1);
 	}
 }
