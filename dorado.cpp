@@ -330,7 +330,7 @@ int toFindDefineRow(vector<u16string>& lines)
 	saveSharpRow = getIsSharpRow(lines);
 	for (auto ele: saveSharpRow)
 	{
-		if (ele == u"#define" || ele == u"#ifdef" || ele == u"ifndef")
+		if (ele == u"#define" || ele == u"#ifdef" || ele == u"ifndef" || ele == u"#undef")
 		{
 			break;
 		}
@@ -343,11 +343,11 @@ int toFindDefineRow(vector<u16string>& lines)
 }
 
 //获取#define后面的内容
-void getRelationContent(vector<u16string>& lines)
+void getRelationContent(vector<u16string>& lines,int statement)
 {
 	int getRow;
 	int getLinesRow;
-	u16string saveDefineContent = u"";
+	u16string saveDefineContent;
 	getRow = toFindDefineRow(lines);
 	if (getRow != 0)
 	{
@@ -382,7 +382,7 @@ void getRelationContent(vector<u16string>& lines)
 						}
 					}
 				}
-				greatFindDefine(saveDefineContent, 1);
+				greatFindDefine(saveDefineContent, statement);
 				break;
 			}
 			else
@@ -393,7 +393,7 @@ void getRelationContent(vector<u16string>& lines)
 	}
 }
 
-
+//创建查找表
 int greatFindDefine(u16string u16, int statement)
 {
 	unordered_set<u16string> findIsDefine;
@@ -414,7 +414,7 @@ int greatFindDefine(u16string u16, int statement)
 	}
 	for(auto ele:findIsDefine)
 	{
-		cout<<to_bytes(ele)<<"sefrf"<<endl;
+		cout<<to_bytes(ele)<<endl;
 	}
 }
 
@@ -454,15 +454,15 @@ int getFirstDefineRow(vector<u16string>& lines)
 		{
 			return saveFindRow=1;
 		}
-		else if(ele == u"#ifdef")
+		else if(ele == u"#undef")
 		{
 			return saveFindRow=2;
 		}
-		else if(ele == u"#ifndef")
+		else if(ele == u"#ifdef")
 		{
 			return saveFindRow=3;
 		}
-		else
+		else if(ele == u"#ifndef")
 		{
 			continue;
 		}
@@ -471,18 +471,28 @@ int getFirstDefineRow(vector<u16string>& lines)
 	return saveFindRow;
 }
 
+vector<u16string> dealUndefineContent(vector<u16string>& lines)
+{
+
+}
 //最终处理#define语句
 vector<u16string> isRelation(vector<u16string>& lines)
 {
 	int tofineDefineRow;
 	vector<u16string> saveRelationRow;
 	tofineDefineRow = getFirstDefineRow(lines);
+	saveRelationRow = lines;
 	while (tofineDefineRow != 0)
 	{
 		if (tofineDefineRow == 1)
 		{
-			saveRelationRow = dealDefineContent(lines);
-			break;
+			saveRelationRow = dealDefineContent(saveRelationRow);
+			tofineDefineRow = getFirstDefineRow(saveRelationRow);
+			continue;
+		}
+		else if(tofineDefineRow == 2)
+		{
+			saveRelationRow = dealUndefineContent(saveRelationRow);
 		}
 	}
 	return saveRelationRow;
@@ -502,9 +512,9 @@ int main()
 	lines = expansionIncludeFile(lines);
 	lines = removeExplabation(lines);
 	lines = isRelation(lines);
-	/*for (auto element: lines)
+	for (auto element: lines)
 	{
 		cout<<to_bytes(element)<<endl;
-	}*/
+	}
 	return 0;
 }
