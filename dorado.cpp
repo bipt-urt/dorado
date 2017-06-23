@@ -238,7 +238,7 @@ vector<u16string> secondToRemoveExplabation(vector<u16string>& lines)
 	for (auto element: lines)
 	{
 		u16string saveRemoveExplabationRow;
-		for (auto ele:element)
+		for (auto ele: element)
 		{
 			if (ele != u'/')
 			{
@@ -254,9 +254,9 @@ vector<u16string> secondToRemoveExplabation(vector<u16string>& lines)
 				{
 					if (element[saveRemoveExplabationRow.size()+1] != u'*')
 					{
-					cout<<"程序有错"<<endl;
-					saveRemoveExplabationRow += ele;
-					continue;
+						cout<<"程序有错"<<endl;
+						saveRemoveExplabationRow += ele;
+						continue;
 					}
 				}
 				else
