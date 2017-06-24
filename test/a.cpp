@@ -5,15 +5,15 @@
 #define sfmd
 #include<stdio.h>//a
 int main()
-{//adasdad
-  #define ning
- #undef  nin
-	#ifndef nin
+{
+ #ifdef sds
+	
    printf("123");
-  /*    printf("abc");
-printf("//Hello");*/
-#define sd
+#ifndef nin
+     printf("abc");
+   printf("//Hello");
 	#endif
    printf("\n hello,world");//ada
+#endif
     return 0;
 }

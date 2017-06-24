@@ -85,10 +85,12 @@ vector<u16string> getIsSharpRow(vector<u16string>& lines)
 }
 
 // 检查＃ifdef和#endif是否匹配
-bool isMatching(vector<u16string>& lines)
+void isMatching(vector<u16string>& lines)
 {
+	vector<u16string> isHaveInclude;
 	stack<u16string> isMatchingStack;
-	for (auto element: lines)
+	isHaveInclude = getIsSharpRow(lines);
+	for (auto element: isHaveInclude)
 	{
 		if (element == u"#ifdef" || element == u"#ifndef")
 		{
@@ -98,28 +100,18 @@ bool isMatching(vector<u16string>& lines)
 		{
 			if (isMatchingStack.empty())
 			{
-				cout<<"没有#ifdef/#ifndef与之匹配a"<<endl;
-				return false;
+				cout<<"没有#ifdef/#ifndef与之匹配"<<endl;
 			}
 			else
 			{
 				isMatchingStack.pop();
 			}
 		}
-		else
-		{
-			continue;
-		}
 	}
-	if (isMatchingStack.empty())
+	if(!isMatchingStack.empty())
 	{
-		return true;
+		cout<<"缺少endif"<<endl;
 	}
-	else
-	{
-		return false;
-	}
-	return true;
 }
 
 // 检查＃include是否都展开了
@@ -190,7 +182,6 @@ vector<u16string> expansionIncludeFile(vector<u16string>& lines)
 	int getIncludeRowtoCount = 1; // 获取include行数
 	int toCount;// 让头文件按顺序插入源文件中
 	isHaveInclude = getIsSharpRow(lines);
-	//isMatching(isHaveInclude);
 	while (getIncludeRowtoCount != 0)
 	{
 		u16string header;
@@ -277,8 +268,7 @@ vector<u16string> removeExplabation(vector<u16string>& lines)
 	vector<u16string> saveRemoveExplabationFile;
 	vector<u16string> isHaveInclude;
 	int statement = 1;// 自动机,1表示没遇到/*,2表示已经遇到/*;3表示遇到*/
-	isHaveInclude = getIsSharpRow(lines);
-	isMatching(isHaveInclude);
+	isMatching(lines);
 	for (auto element: lines)
 	{
 		u16string saveRemoveExplabationRow;
@@ -330,7 +320,7 @@ int toFindDefineRow(vector<u16string>& lines)
 	saveSharpRow = getIsSharpRow(lines);
 	for (auto ele: saveSharpRow)
 	{
-		if (ele == u"#define" || ele == u"#ifdef" || ele == u"ifndef" || ele == u"#undef")
+		if (ele == u"#define" || ele == u"#ifdef" || ele == u"#ifndef" || ele == u"#undef")
 		{
 			break;
 		}
@@ -346,7 +336,7 @@ int toFindDefineRow(vector<u16string>& lines)
 u16string getRelationContent(vector<u16string>& lines)
 {
 	int getRow;
-	int getLinesRow;
+	int getLinesRow = 1;
 	u16string saveDefineContent;
 	u16string text;
 	getRow = toFindDefineRow(lines);
@@ -355,7 +345,7 @@ u16string getRelationContent(vector<u16string>& lines)
 		for (auto element: lines)
 		{
 			int statement = 1;
-			if (getLinesRow == getRow - 1)
+			if (getLinesRow == getRow)
 			{
 				for (auto ele: element)
 				{
@@ -375,6 +365,7 @@ u16string getRelationContent(vector<u16string>& lines)
 						}
 					}
 				}
+				return saveDefineContent;
 				break;
 			}
 			else
@@ -386,12 +377,14 @@ u16string getRelationContent(vector<u16string>& lines)
 	return saveDefineContent;
 }
 
+//删除或者插入查找表的元素
 void insertOrDeleteChart(vector<u16string> lines, int statement)
 {
 	u16string getDefineContent;
 	getDefineContent = getRelationContent(lines);
 	greatFindDefineChart(getDefineContent, statement);
 }
+
 //创建查找表
 bool greatFindDefineChart(u16string u16, int statement)
 {
@@ -399,7 +392,6 @@ bool greatFindDefineChart(u16string u16, int statement)
 	if (statement == 1)
 	{
 		findIsDefine.insert(u16);
-	//	cout<<"%"<<endl;
 	}
 	else if(statement == 2)
 	{
@@ -417,8 +409,6 @@ bool greatFindDefineChart(u16string u16, int statement)
 		}
 	}
 }
-
-
 
 //删除#define行
 vector<u16string> dealDefineContent(vector<u16string>& lines, int statement)
@@ -472,8 +462,6 @@ int getFirstDefineRow(vector<u16string>& lines)
 	return saveFindRow;
 }
 
-
-
 //判断是否删除#ifdef的内容
 bool isDeleteIfdefContent(vector<u16string>& lines)
 {
@@ -483,19 +471,119 @@ bool isDeleteIfdefContent(vector<u16string>& lines)
 	return greatFindDefineChart(ifdefContent,3);
 }
 
+//找最后一个endif
+int toFindEndifRow(vector<u16string>& lines)
+{
+	int lastEndifRow = 1;
+	vector<u16string> isHaveInclude;
+	stack<u16string> isMatchingStack;
+	isHaveInclude = getIsSharpRow(lines);
+	for (auto element: isHaveInclude)
+	{
+		if (element == u"#ifdef" || element == u"#ifndef")
+		{
+			isMatchingStack.push(element);
+			lastEndifRow ++;
+		}
+		else if(element == u"#endif") 
+		{
+				isMatchingStack.pop();
+				lastEndifRow ++;
+				if(isMatchingStack.empty())
+				{
+					return lastEndifRow - 1;
+				}
+		}
+		else
+		{
+			lastEndifRow ++;
+		}
+	}
+	return lastEndifRow;
+}
+
+//删除#ifndef与否
+vector<u16string> dealIfndefContent(vector<u16string>& lines,bool statement)
+{
+	vector<u16string> saveDealIfdef;
+	bool isDelete;
+	int getIfdefRowNumber = 0;
+	int getEndifRowNumber = 0;
+	int isWhereRow =1 ;
+	getIfdefRowNumber = toFindDefineRow(lines);
+	getEndifRowNumber = toFindEndifRow(lines);
+	isDelete = isDeleteIfdefContent(lines);
+	cout<<isDelete<<"%"<<endl;
+	for (auto element: lines)
+	{
+		if (isWhereRow == getIfdefRowNumber )
+		{
+			isWhereRow++;
+		}
+		else if(isWhereRow > getIfdefRowNumber && isWhereRow < getEndifRowNumber)
+		{
+			if (isDelete == 0)
+			{
+				saveDealIfdef.push_back(element);
+				isWhereRow++; 
+			}
+			else
+			{
+				isWhereRow++;
+			}
+		}
+		else if(isWhereRow == getEndifRowNumber)
+		{
+			isWhereRow++;
+		}
+		else 
+		{
+			isWhereRow++;
+			saveDealIfdef.push_back(element);
+		}
+	}
+	return saveDealIfdef;
+}
+
+
 //删除#ifdef与否
 vector<u16string> dealIfdefContent(vector<u16string>& lines,bool statement)
 {
 	vector<u16string> saveDealIfdef;
 	bool isDelete;
-	int getIfdefRowNumber;
+	int getIfdefRowNumber = 0;
+	int getEndifRowNumber = 0;
 	int isWhereRow =1 ;
-	saveDealIfdef = lines;
-	getIfdefRowNumber = toFindDefineRow(saveDealIfdef);
-	isDelete = isDeleteIfdefContent(saveDealIfdef);
-	for (auto element: saveDealIfdef)
+	getIfdefRowNumber = toFindDefineRow(lines);
+	getEndifRowNumber = toFindEndifRow(lines);
+	isDelete = isDeleteIfdefContent(lines);
+	for (auto element: lines)
 	{
-		if()
+		if (isWhereRow == getIfdefRowNumber)
+		{
+			isWhereRow++;
+		}
+		else if(isWhereRow > getIfdefRowNumber && isWhereRow < getEndifRowNumber)
+		{
+			if (isDelete == 1)
+			{
+				saveDealIfdef.push_back(element);
+				isWhereRow++; 
+			}
+			else
+			{
+				isWhereRow++;
+			}
+		}
+		else if(isWhereRow == getEndifRowNumber)
+		{
+			isWhereRow++;
+		}
+		else 
+		{
+			isWhereRow++;
+			saveDealIfdef.push_back(element);
+		}
 	}
 	return saveDealIfdef;
 }
@@ -524,6 +612,13 @@ vector<u16string> isRelation(vector<u16string>& lines)
 		else if(tofineDefineRow == 3)
 		{
 			saveRelationRow = dealIfdefContent(saveRelationRow, 3);
+			tofineDefineRow = getFirstDefineRow(saveRelationRow);
+		}
+		else if(tofineDefineRow == 4)
+		{
+			saveRelationRow = dealIfndefContent(saveRelationRow, 3);
+			tofineDefineRow = getFirstDefineRow(saveRelationRow);
+			break;
 		}
 	}
 	return saveRelationRow;
