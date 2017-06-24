@@ -16,7 +16,7 @@
 
 using namespace std;
 
-int greatFindDefine(u16string u16, int statement);
+bool greatFindDefineChart(u16string u16, int statement);
 
 string to_bytes(u16string _str)
 {
@@ -142,7 +142,7 @@ int checkTheInclude(vector<u16string>& combination)
 	return toCount;
 }
 
-// 找头文件的名子
+// 找头文件的名字
 vector<u16string> findgetHeaderFileName(vector<u16string>& lines, int getIncludeRowtoCount)
 {
 	int findGetIncludeRowtoCount = 0;
@@ -322,7 +322,7 @@ vector<u16string> removeExplabation(vector<u16string>& lines)
 	return saveRemoveExplabationFile;
 }
 
-//判断#define #ifdef #ifndef 在第几行
+//判断#define/#ifdef/#ifndef/#undef在第几行
 int toFindDefineRow(vector<u16string>& lines)
 {
 	int getDefineRow = 1;
@@ -342,12 +342,13 @@ int toFindDefineRow(vector<u16string>& lines)
 	return getDefineRow;
 }
 
-//获取#define后面的内容
-void getRelationContent(vector<u16string>& lines,int statement)
+//获取#define/#undef/#ifdef/#ifndef后面的内容
+u16string getRelationContent(vector<u16string>& lines)
 {
 	int getRow;
 	int getLinesRow;
 	u16string saveDefineContent;
+	u16string text;
 	getRow = toFindDefineRow(lines);
 	if (getRow != 0)
 	{
@@ -365,10 +366,6 @@ void getRelationContent(vector<u16string>& lines,int statement)
 							statement = 2;
 							continue;
 						}
-						else
-						{
-							continue;
-						}
 					}
 					else if(statement == 2)
 					{
@@ -376,13 +373,8 @@ void getRelationContent(vector<u16string>& lines,int statement)
 						{
 							saveDefineContent += ele;
 						}
-						else
-						{
-							continue;
-						}
 					}
 				}
-				greatFindDefine(saveDefineContent, statement);
 				break;
 			}
 			else
@@ -391,35 +383,45 @@ void getRelationContent(vector<u16string>& lines,int statement)
 			}
 		}
 	}
+	return saveDefineContent;
 }
 
-//创建查找表
-int greatFindDefine(u16string u16, int statement)
+void insertOrDeleteChart(vector<u16string> lines, int statement)
 {
-	unordered_set<u16string> findIsDefine;
+	u16string getDefineContent;
+	getDefineContent = getRelationContent(lines);
+	greatFindDefineChart(getDefineContent, statement);
+}
+//创建查找表
+bool greatFindDefineChart(u16string u16, int statement)
+{
+	static unordered_set<u16string> findIsDefine;
 	if (statement == 1)
 	{
 		findIsDefine.insert(u16);
+	//	cout<<"%"<<endl;
 	}
 	else if(statement == 2)
 	{
-		/*if(search != example.end()) 
+		findIsDefine.erase(u16);
+	}
+	else if(statement == 3)
+	{
+		if(find(findIsDefine.begin(), findIsDefine.end(), u16) != findIsDefine.end())
 		{
-	
+			return true;
 		}
 		else
 		{
-			std::cout << "Not found\n";
-		}*/
-	}
-	for(auto ele:findIsDefine)
-	{
-		cout<<to_bytes(ele)<<endl;
+			return false;
+		}
 	}
 }
 
+
+
 //删除#define行
-vector<u16string> dealDefineContent(vector<u16string>& lines)
+vector<u16string> dealDefineContent(vector<u16string>& lines, int statement)
 {
 	vector<u16string> saveDealResult;
 	int getDefineRow;
@@ -429,8 +431,7 @@ vector<u16string> dealDefineContent(vector<u16string>& lines)
 	{
 		if (getLinesRow == getDefineRow)
 		{
-			getRelationContent(lines);
-			//element.erase(lines.begin()+getLinesRow);
+			insertOrDeleteChart(lines, statement);
 			getLinesRow ++;
 		}
 		else
@@ -464,17 +465,41 @@ int getFirstDefineRow(vector<u16string>& lines)
 		}
 		else if(ele == u"#ifndef")
 		{
-			continue;
+			return saveFindRow=4;
 		}
 	}
 	saveFindRow = 0;
 	return saveFindRow;
 }
 
-vector<u16string> dealUndefineContent(vector<u16string>& lines)
-{
 
+
+//判断是否删除#ifdef的内容
+bool isDeleteIfdefContent(vector<u16string>& lines)
+{
+	int getIfdefRowNumber;
+	u16string ifdefContent;
+	ifdefContent = getRelationContent(lines);
+	return greatFindDefineChart(ifdefContent,3);
 }
+
+//删除#ifdef与否
+vector<u16string> dealIfdefContent(vector<u16string>& lines,bool statement)
+{
+	vector<u16string> saveDealIfdef;
+	bool isDelete;
+	int getIfdefRowNumber;
+	int isWhereRow =1 ;
+	saveDealIfdef = lines;
+	getIfdefRowNumber = toFindDefineRow(saveDealIfdef);
+	isDelete = isDeleteIfdefContent(saveDealIfdef);
+	for (auto element: saveDealIfdef)
+	{
+		if()
+	}
+	return saveDealIfdef;
+}
+
 //最终处理#define语句
 vector<u16string> isRelation(vector<u16string>& lines)
 {
@@ -486,13 +511,19 @@ vector<u16string> isRelation(vector<u16string>& lines)
 	{
 		if (tofineDefineRow == 1)
 		{
-			saveRelationRow = dealDefineContent(saveRelationRow);
+			saveRelationRow = dealDefineContent(saveRelationRow, 1);
 			tofineDefineRow = getFirstDefineRow(saveRelationRow);
 			continue;
 		}
 		else if(tofineDefineRow == 2)
 		{
-			saveRelationRow = dealUndefineContent(saveRelationRow);
+			saveRelationRow = dealDefineContent(saveRelationRow, 2);
+			tofineDefineRow = getFirstDefineRow(saveRelationRow);
+			continue;
+		}
+		else if(tofineDefineRow == 3)
+		{
+			saveRelationRow = dealIfdefContent(saveRelationRow, 3);
 		}
 	}
 	return saveRelationRow;
