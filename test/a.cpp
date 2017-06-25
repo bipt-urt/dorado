@@ -1,17 +1,19 @@
 
-#define 876
+#define nin
+
 #define sds
 #define sfmd
 #include<stdio.h>//a
 int main()
-{//adasdad
-  #define ning
-   
-	#ifndef nin
+{
+ #ifdef sds
+	
    printf("123");
-  /*    printf("abc");
-printf("//Hello");*/
+#ifndef nin
+     printf("abc");
+   printf("//Hello");
 	#endif
    printf("\n hello,world");//ada
+#endif
     return 0;
 }
