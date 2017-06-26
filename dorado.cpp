@@ -1,4 +1,4 @@
-// Dorado编译器
+// Dorado编译器工具集
 // 2017 北京石油化工学院
 // 王万霖 梁永宁
 // g++ dorado.cpp -o dorado --std=c++11
@@ -16,18 +16,7 @@
 
 using namespace std;
 
-string to_bytes(u16string _str)
-{
-	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
-	return cvt.to_bytes(_str);
-}
-
-u16string from_bytes(string _str)
-{
-	wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> cvt;
-	return cvt.from_bytes(_str);
-}
-
+#include "u16string.h"
 #include "preProcess.h"
 
 int main()
