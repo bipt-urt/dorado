@@ -3,17 +3,20 @@
 
 #define sds
 #define sfmd
-#include<stdio.h>//a
+#include<stdio.h>
+int x = 1;
 int main()
 {
- #ifdef sds
-#define ning	
+
    printf("123");
-#ifndef ning
-     printf("abc");
-   printf("//Hello");
-	#endif
    printf("\n hello,world");//ada
-#endif
+   text();	
     return 0;
+}
+
+int text()
+{
+  printf("abc");
+   printf("//Hello");
+return 0;
 }

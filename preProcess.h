@@ -1,3 +1,6 @@
+//预处理完成
+
+
 bool greatFindDefineChart(u16string u16, int statement);
 
 // 去掉空格
@@ -329,7 +332,11 @@ u16string getRelationContent(vector<u16string>& lines)
 					}
 					else if(statement == 2)
 					{
-						if (ele != u' ')
+						if (ele == u' ' || ele == u'\t')
+						{
+							continue;
+						}
+						else
 						{
 							saveDefineContent += ele;
 						}
