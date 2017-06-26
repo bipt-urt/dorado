@@ -22,6 +22,7 @@ using namespace std;
 #include "u16string.h"
 #include "dorado.h"
 #include "preProcess.h"
+#include "splitBlock.h"
 
 int main(int argc, char* argv[])
 {
