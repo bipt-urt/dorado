@@ -19,7 +19,7 @@ struct Apple
 
 int main()
 {
-
+	#endif
    printf("123");
    printf("\n hello,world");//ada
    text();	

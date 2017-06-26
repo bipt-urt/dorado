@@ -73,7 +73,7 @@ void isMatching(vector<u16string>& lines)
 		{
 			if (isMatchingStack.empty())
 			{
-				cout<<"没有#ifdef/#ifndef与之匹配"<<endl;
+				doradoError(u"没有#ifdef/#ifndef与之匹配");
 			}
 			else
 			{
@@ -83,7 +83,7 @@ void isMatching(vector<u16string>& lines)
 	}
 	if(!isMatchingStack.empty())
 	{
-		cout<<"缺少endif"<<endl;
+		doradoError(u"缺少endif");
 	}
 }
 
@@ -219,7 +219,7 @@ vector<u16string> secondToRemoveExplabation(vector<u16string>& lines)
 				{
 					if (element[saveRemoveExplabationRow.size()+1] != u'*')
 					{
-						cout<<"程序有错"<<endl;
+						doradoError(u"程序有错");
 						saveRemoveExplabationRow += ele;
 						continue;
 					}
