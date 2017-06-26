@@ -483,7 +483,6 @@ vector<u16string> dealIfndefContent(vector<u16string>& lines,bool statement)
 	getIfdefRowNumber = toFindDefineRow(lines);
 	getEndifRowNumber = toFindEndifRow(lines);
 	isDelete = isDeleteIfdefContent(lines);
-	cout<<isDelete<<"%"<<endl;
 	for (auto element: lines)
 	{
 		if (isWhereRow == getIfdefRowNumber )

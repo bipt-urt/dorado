@@ -7,9 +7,9 @@
 int main()
 {
  #ifdef sds
-	
+#define ning	
    printf("123");
-#ifndef nin
+#ifndef ning
      printf("abc");
    printf("//Hello");
 	#endif
