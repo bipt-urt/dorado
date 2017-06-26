@@ -1,10 +1,22 @@
 
-#define nin
-
-#define sds
-#define sfmd
 #include<stdio.h>
+
 int x = 1;
+char a=65;
+char b='65';
+
+
+void text()
+{
+  printf("abc");
+   printf("//Hello");
+}
+
+struct Apple
+{
+	int b;
+};
+
 int main()
 {
 
@@ -14,9 +26,4 @@ int main()
     return 0;
 }
 
-int text()
-{
-  printf("abc");
-   printf("//Hello");
-return 0;
-}
+
