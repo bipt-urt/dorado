@@ -25,8 +25,6 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	cmdProcess(argc, argv);
-	return 0;
 	fstream getSourceFile("test/a.cpp", std::ios::in);
 	string getSourceFileEachRow;
 	vector<u16string> lines;
