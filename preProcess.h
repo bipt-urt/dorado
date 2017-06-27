@@ -240,7 +240,7 @@ vector<u16string> removeExplabation(vector<u16string>& lines)
 {
 	vector<u16string> saveRemoveExplabationFile;
 	vector<u16string> isHaveInclude;
-	int statement = 1;// 自动机,1表示没遇到/*,2表示已经遇到/*;3表示遇到*/
+	int statement = 1;// 自动机,1表示没遇到'/*',2表示已经遇到'/*';3表示遇到'*/'
 	isMatching(lines);
 	for (auto element: lines)
 	{

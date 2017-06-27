@@ -1,5 +1,4 @@
 
-#include<stdio.h>
 
 int x = 1;
 char a=65;
@@ -19,9 +18,9 @@ struct Apple
 
 int main()
 {
-	#endif
+	
    printf("123");
-   printf("\n hello,world");//ada
+   printf("\n hello,world");
    text();	
     return 0;
 }
