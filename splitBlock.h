@@ -21,7 +21,42 @@ bool isAlpha(const char16_t& _char)
 		u'T', u'U', u'V', u'W', u'X',
 		u'Y', u'Z'
 	};
-	return find(alphabet.begin(), alphabet.end(), _char)!=alphabet.end();
+	return find(alphabet.begin(), alphabet.end(), _char) != alphabet.end();
+}
+
+// 查找该行最近的分隔符, 特别地, 为了区分函数的声明和定义, 函数的声明将返回(, 函数的定义将返回)
+char16_t findSplitSymbol(const vector<u16string>& _lines, const int& rowId = 0)
+{
+	bool isFunction = false;
+	for (auto i=_lines.begin()+rowId; i!=_lines.end(); i++)
+	{
+		for (auto letter: *i)
+		{
+			if (letter == u'{' || letter == u';')
+			{
+				if (!isFunction)
+				{
+					return letter;
+				}
+				else
+				{
+					if (letter == u'{')
+					{
+						return u')';
+					}
+					else
+					{
+						return u'(';
+					}
+				}
+			}
+			else if (letter == u'(')
+			{
+				isFunction = true;
+			}
+		}
+	}
+	return u'\0';
 }
 
 u16string getFirstWord(const u16string& _str)
@@ -44,13 +79,34 @@ u16string getFirstWord(const u16string& _str)
 vector<blockSegment> splitBlock(const vector<u16string>& _lines)
 {
 	vector<blockSegment> res;
+	vector<int> splitLineNumber;
+	int blockLevel = 0;
+	int rowNumber = -1;
 	for (auto line: _lines)
 	{
+		rowNumber++;
 		if (line.empty())
 		{
 			continue;
 		}
-		cout<<to_bytes(getFirstWord(line))<<endl;
+		if (line[0] == u'{')
+		{
+			blockLevel++;
+		}
+		else if(line[0] == u'}')
+		{
+			blockLevel--;
+			continue;
+		}
+		if (blockLevel)
+		{
+			continue;
+		}
+		splitLineNumber.push_back(rowNumber);
+	}
+	for (auto element: splitLineNumber)
+	{
+		cout<<to_bytes(_lines[element])<<endl;
 	}
 	return res;
 }

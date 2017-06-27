@@ -1,11 +1,15 @@
 #include "stdio.h"
 
-
 struct banana;
+
+int test = 1;
+int y = 2;
+
+int add(int, int);
 
 int add(int _x, int _y)
 {
-	return _x+_y;
+	return _x + _y;
 }
 
 int main(int argc, char* argv[])

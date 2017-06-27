@@ -22,6 +22,7 @@ using namespace std;
 #include "u16string.h"
 #include "dorado.h"
 #include "preProcess.h"
+#include "doradoTypes.h"
 #include "splitBlock.h"
 
 int main(int argc, char* argv[])
@@ -34,6 +35,11 @@ int main(int argc, char* argv[])
 		lines.push_back(from_bytes(getSourceFileEachRow));
 	}
 	preProcess(lines);
+	int rowNumber = 0;
+	for (auto line: lines)
+	{
+		cout<<"["<<rowNumber++<<"]\t"<<to_bytes(line)<<endl;
+	}
 	splitBlock(lines);
 	return 0;
 }
