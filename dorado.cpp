@@ -24,6 +24,7 @@ using namespace std;
 #include "preProcess.h"
 #include "doradoTypes.h"
 #include "splitBlock.h"
+#include "participle.h"
 
 int main(int argc, char* argv[])
 {
@@ -41,5 +42,6 @@ int main(int argc, char* argv[])
 		cout<<"["<<rowNumber++<<"]\t"<<to_bytes(line)<<endl;
 	}
 	splitBlock(lines);
+	wordSegment(u"int a1=     2;");
 	return 0;
 }
