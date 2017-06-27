@@ -34,5 +34,6 @@ int main(int argc, char* argv[])
 		lines.push_back(from_bytes(getSourceFileEachRow));
 	}
 	preProcess(lines);
+	splitBlock(lines);
 	return 0;
 }

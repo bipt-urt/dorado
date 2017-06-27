@@ -1,29 +1,25 @@
+#include "stdio.h"
 
-#include<stdio.h>
+int apple = 1;
+char orange = 'O';
 
-int x = 1;
-char a=65;
-char b='65';
+struct banana;
 
-
-void text()
+int add(int _x, int _y)
 {
-  printf("abc");
-   printf("//Hello");
+	return _x+_y;
 }
 
-struct Apple
+int main(int argc, char* argv[])
 {
-	int b;
-};
-
-int main()
-{
-	#endif
-   printf("123");
-   printf("\n hello,world");//ada
-   text();	
-    return 0;
+	int x = 3;
+	int y = 2;
+	printf(add(x, y));
+	return 0;
 }
 
-
+struct banana
+{
+	int weight;
+	int width;
+}

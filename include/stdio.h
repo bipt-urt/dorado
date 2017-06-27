@@ -1,7 +1,5 @@
 #define BIPTC_STD_STDIO
+#ifndef BIPTC_STD_STDIO
 #include "base.h"
-
-void printf(char* _stringCondition, var...)
-{
-
-}
+// This is standerd stdio head file
+#endif
