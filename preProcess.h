@@ -1,8 +1,3 @@
-//预处理完成
-
-
-bool greatFindDefineChart(u16string u16, int statement);
-
 // 去掉空格
 vector<u16string> removeBlank(vector<u16string>& lines)
 {
@@ -354,14 +349,6 @@ u16string getRelationContent(vector<u16string>& lines)
 	return saveDefineContent;
 }
 
-//删除或者插入查找表的元素
-void insertOrDeleteChart(vector<u16string> lines, int statement)
-{
-	u16string getDefineContent;
-	getDefineContent = getRelationContent(lines);
-	greatFindDefineChart(getDefineContent, statement);
-}
-
 //创建查找表
 bool greatFindDefineChart(u16string u16, int statement)
 {
@@ -385,6 +372,14 @@ bool greatFindDefineChart(u16string u16, int statement)
 			return false;
 		}
 	}
+}
+
+//删除或者插入查找表的元素
+void insertOrDeleteChart(vector<u16string> lines, int statement)
+{
+	u16string getDefineContent;
+	getDefineContent = getRelationContent(lines);
+	greatFindDefineChart(getDefineContent, statement);
 }
 
 //删除#define行
