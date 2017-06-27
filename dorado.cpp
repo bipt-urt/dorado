@@ -33,14 +33,7 @@ int main(int argc, char* argv[])
 	{
 		lines.push_back(from_bytes(getSourceFileEachRow));
 	}
-	lines = removeBlank(lines);
-	lines = removeExplabation(lines);
-	lines = expansionIncludeFile(lines);
-	lines = removeExplabation(lines);
-	lines = isRelation(lines);
-	for (auto element: lines)
-	{
-		cout<<to_bytes(element)<<endl;
-	}
+	preProcess(lines);
+	splitBlock(lines);
 	return 0;
 }
