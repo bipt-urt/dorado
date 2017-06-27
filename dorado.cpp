@@ -38,6 +38,6 @@ int main(int argc, char* argv[])
 	preProcess(lines);
 	showCode(lines);
 	splitBlock(lines);
-	wordSegment(u"int a1=     2;");
+	wordSegment(u"int a1= 	2;");
 	return 0;
 }

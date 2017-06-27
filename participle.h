@@ -70,14 +70,15 @@ vector<word> wordSegment(const u16string& line)
 		{
 			if (find(savaParticiple.begin(),
 					savaParticiple.end(), saveElementAttribute)
-				== savaParticiple.end())
+				!= savaParticiple.end())
 			{
 				saveWord += element;
 			}
 			else
 			{
+				
 				getWordAndType.push_back(saveWord);
-				saveWord = u" ";
+				saveWord = u"";
 				if (element == u' ' || element == u'\t')
 				{
 					continue;
