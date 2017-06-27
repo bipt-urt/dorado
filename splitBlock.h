@@ -3,6 +3,12 @@ struct blockSegment
 	public:
 		vector<u16string> lines;
 		u16string type;
+		// 根据代码块类型的不同, 利用type来进行区分
+		// variable 变量定义
+		// structDeclear 结构体声明
+		// structDefine 结构体定义
+		// functionDeclear 函数声明
+		// functionDefine 函数定义
 };
 
 bool isAlpha(const char16_t& _char)
@@ -104,9 +110,27 @@ vector<blockSegment> splitBlock(const vector<u16string>& _lines)
 		}
 		splitLineNumber.push_back(rowNumber);
 	}
-	for (auto element: splitLineNumber)
+	for (auto i=splitLineNumber.begin(); i!=splitLineNumber.end(); i++)
 	{
-		cout<<to_bytes(_lines[element])<<endl;
+		int beginRowNumber = *i;
+		int endRowNumber;
+		if (i+1 == splitLineNumber.end())
+		{
+			endRowNumber = rowNumber + 1;
+		}
+		else
+		{
+			endRowNumber = *(i+1);
+		}
+		blockSegment block;
+		for (int row=beginRowNumber; row!=endRowNumber; row++)
+		{
+			block.lines.push_back(_lines[row]);
+		}
+		char16_t endChar = findSplitSymbol(_lines, beginRowNumber);
+		u16string firstWord = getFirstWord(_lines[beginRowNumber]);
+		cout<<beginRowNumber<<"-"<<endRowNumber<<":"<<block.lines.size()<<"@"<<to_bytes(firstWord)<<"#"<<char(endChar)<<endl;
+		res.push_back(block);
 	}
 	return res;
 }
