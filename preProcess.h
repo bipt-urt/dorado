@@ -1,8 +1,8 @@
 // 去掉空格
-vector<u16string> removeBlank(vector<u16string>& lines)
+vector<u16string> removeBlank(vector<u16string>& _lines)
 {
 	vector<u16string> removeBlankSourceFile;
-	for (auto element: lines)
+	for (auto element: _lines)
 	{
 		u16string saveRemoveBlankRow;
 		bool statement = true;
@@ -27,10 +27,10 @@ vector<u16string> removeBlank(vector<u16string>& lines)
 }
 
 // 提取＃开头的函数
-vector<u16string> getIsSharpRow(vector<u16string>& lines)
+vector<u16string> getIsSharpRow(vector<u16string>& _lines)
 {
 	vector<u16string> saveHaveSharpRow;
-	for (auto element: lines)
+	for (auto element: _lines)
 	{
 		u16string saveSharpLow;
 		if (element[0] == u'#')
@@ -53,11 +53,11 @@ vector<u16string> getIsSharpRow(vector<u16string>& lines)
 }
 
 // 检查＃ifdef和#endif是否匹配
-void isMatching(vector<u16string>& lines)
+void isMatching(vector<u16string>& _lines)
 {
 	vector<u16string> isHaveInclude;
 	stack<u16string> isMatchingStack;
-	isHaveInclude = getIsSharpRow(lines);
+	isHaveInclude = getIsSharpRow(_lines);
 	for (auto element: isHaveInclude)
 	{
 		if (element == u"#ifdef" || element == u"#ifndef")
@@ -103,15 +103,15 @@ int checkTheInclude(vector<u16string>& combination)
 }
 
 // 找头文件的名字
-vector<u16string> findgetHeaderFileName(vector<u16string>& lines, int getIncludeRowtoCount)
+vector<u16string> findgetHeaderFileName(vector<u16string>& _lines, const int& _getIncludeRowtoCount)
 {
 	int findGetIncludeRowtoCount = 0;
 	vector<u16string> vec;
 	u16string u16;
 	int statement = 1;
-	for (auto element: lines)
+	for (auto element: _lines)
 	{
-		if (findGetIncludeRowtoCount == getIncludeRowtoCount-1)
+		if (findGetIncludeRowtoCount == _getIncludeRowtoCount-1)
 		{
 			for (auto ele: element)
 			{
@@ -143,13 +143,13 @@ vector<u16string> findgetHeaderFileName(vector<u16string>& lines, int getInclude
 }
 
 // 展开include文件
-vector<u16string> expansionIncludeFile(vector<u16string>& lines)
+vector<u16string> expansionIncludeFile(vector<u16string>& _lines)
 {
 	vector<u16string> isHaveInclude;
 	vector<u16string> getHeaderFileName;
 	int getIncludeRowtoCount = 1; // 获取include行数
 	int toCount;// 让头文件按顺序插入源文件中
-	isHaveInclude = getIsSharpRow(lines);
+	isHaveInclude = getIsSharpRow(_lines);
 	while (getIncludeRowtoCount != 0)
 	{
 		u16string header;
@@ -157,7 +157,7 @@ vector<u16string> expansionIncludeFile(vector<u16string>& lines)
 		if (getIncludeRowtoCount != 0)
 		{
 			toCount = getIncludeRowtoCount;
-			getHeaderFileName = findgetHeaderFileName(lines,getIncludeRowtoCount);
+			getHeaderFileName = findgetHeaderFileName(_lines,getIncludeRowtoCount);
 			for (auto element: getHeaderFileName)
 			{
 				for (auto ele: element)
@@ -180,22 +180,22 @@ vector<u16string> expansionIncludeFile(vector<u16string>& lines)
 			isHaveInclude.erase(isHaveInclude.begin()+getIncludeRowtoCount-1);
 			for (auto element: vecHead)
 			{
-				lines.insert(lines.begin()+toCount, element);
+				_lines.insert(_lines.begin()+toCount, element);
 				toCount++;
 			}
-			lines.erase(lines.begin()+getIncludeRowtoCount-1);
-			isHaveInclude = getIsSharpRow(lines);
+			_lines.erase(_lines.begin()+getIncludeRowtoCount-1);
+			isHaveInclude = getIsSharpRow(_lines);
 		}
 		
 	}
-	return lines;
+	return _lines;
 }
 
 // 删掉(注释)//后面的内容
-vector<u16string> secondToRemoveExplabation(vector<u16string>& lines)
+vector<u16string> secondToRemoveExplabation(vector<u16string>& _lines)
 {
 	vector<u16string> vec;
-	for (auto element: lines)
+	for (auto element: _lines)
 	{
 		u16string saveRemoveExplabationRow;
 		for (auto ele: element)
@@ -231,13 +231,13 @@ vector<u16string> secondToRemoveExplabation(vector<u16string>& lines)
 }
 
 // 去掉/*到*/之间的内容
-vector<u16string> removeExplabation(vector<u16string>& lines)
+vector<u16string> removeExplabation(vector<u16string>& _lines)
 {
 	vector<u16string> saveRemoveExplabationFile;
 	vector<u16string> isHaveInclude;
 	int statement = 1;// 自动机,1表示没遇到/*,2表示已经遇到/*;3表示遇到*/
-	isMatching(lines);
-	for (auto element: lines)
+	isMatching(_lines);
+	for (auto element: _lines)
 	{
 		u16string saveRemoveExplabationRow;
 		for (auto ele: element)
@@ -265,7 +265,7 @@ vector<u16string> removeExplabation(vector<u16string>& lines)
 				{
 					if (ele == u'/')
 					{
-					statement = 1;
+						statement = 1;
 					}
 					else
 					{
@@ -280,12 +280,12 @@ vector<u16string> removeExplabation(vector<u16string>& lines)
 	return saveRemoveExplabationFile;
 }
 
-//判断#define/#ifdef/#ifndef/#undef在第几行
-int toFindDefineRow(vector<u16string>& lines)
+// 判断#define/#ifdef/#ifndef/#undef在第几行
+int toFindDefineRow(vector<u16string>& _lines)
 {
 	int getDefineRow = 1;
 	vector<u16string> saveSharpRow;
-	saveSharpRow = getIsSharpRow(lines);
+	saveSharpRow = getIsSharpRow(_lines);
 	for (auto ele: saveSharpRow)
 	{
 		if (ele == u"#define" || ele == u"#ifdef" || ele == u"#ifndef" || ele == u"#undef")
@@ -300,17 +300,17 @@ int toFindDefineRow(vector<u16string>& lines)
 	return getDefineRow;
 }
 
-//获取#define/#undef/#ifdef/#ifndef后面的内容
-u16string getRelationContent(vector<u16string>& lines)
+// 获取#define/#undef/#ifdef/#ifndef后面的内容
+u16string getRelationContent(vector<u16string>& _lines)
 {
 	int getRow;
 	int getLinesRow = 1;
 	u16string saveDefineContent;
 	u16string text;
-	getRow = toFindDefineRow(lines);
+	getRow = toFindDefineRow(_lines);
 	if (getRow != 0)
 	{
-		for (auto element: lines)
+		for (auto element: _lines)
 		{
 			int statement = 1;
 			if (getLinesRow == getRow)
@@ -338,7 +338,6 @@ u16string getRelationContent(vector<u16string>& lines)
 					}
 				}
 				return saveDefineContent;
-				break;
 			}
 			else
 			{
@@ -349,19 +348,19 @@ u16string getRelationContent(vector<u16string>& lines)
 	return saveDefineContent;
 }
 
-//创建查找表
-bool greatFindDefineChart(u16string u16, int statement)
+// 创建查找表
+bool greatFindDefineChart(const u16string& u16, const int& _statement)
 {
 	static unordered_set<u16string> findIsDefine;
-	if (statement == 1)
+	if (_statement == 1)
 	{
 		findIsDefine.insert(u16);
 	}
-	else if(statement == 2)
+	else if(_statement == 2)
 	{
 		findIsDefine.erase(u16);
 	}
-	else if(statement == 3)
+	else if(_statement == 3)
 	{
 		if(find(findIsDefine.begin(), findIsDefine.end(), u16) != findIsDefine.end())
 		{
@@ -374,118 +373,118 @@ bool greatFindDefineChart(u16string u16, int statement)
 	}
 }
 
-//删除或者插入查找表的元素
-void insertOrDeleteChart(vector<u16string> lines, int statement)
+// 删除或者插入查找表的元素
+void insertOrDeleteChart(vector<u16string> _lines, const int& statement)
 {
 	u16string getDefineContent;
-	getDefineContent = getRelationContent(lines);
+	getDefineContent = getRelationContent(_lines);
 	greatFindDefineChart(getDefineContent, statement);
 }
 
-//删除#define行
-vector<u16string> dealDefineContent(vector<u16string>& lines, int statement)
+// 删除#define行
+vector<u16string> dealDefineContent(vector<u16string>& _lines, const int& _statement)
 {
 	vector<u16string> saveDealResult;
 	int getDefineRow;
 	int getLinesRow = 1;
-	getDefineRow = toFindDefineRow(lines);
-	for (auto element: lines)
+	getDefineRow = toFindDefineRow(_lines);
+	for (auto element: _lines)
 	{
 		if (getLinesRow == getDefineRow)
 		{
-			insertOrDeleteChart(lines, statement);
-			getLinesRow ++;
+			insertOrDeleteChart(_lines, _statement);
+			getLinesRow++;
 		}
 		else
 		{
-			getLinesRow ++;
+			getLinesRow++;
 			saveDealResult.push_back(element);
 		}
 	}
 	return saveDealResult;
 }
 
-//判断#define #ifdef #ifndef那个在先
-int getFirstDefineRow(vector<u16string>& lines)
+// 判断#define #ifdef #ifndef那个在先
+int getFirstDefineRow(vector<u16string>& _lines)
 {
 	int saveFindRow;
 	vector<u16string> toGetSharpRow;
-	toGetSharpRow = getIsSharpRow(lines);
+	toGetSharpRow = getIsSharpRow(_lines);
 	for (auto ele: toGetSharpRow)
 	{
 		if (ele == u"#define")
 		{
-			return saveFindRow=1;
+			return saveFindRow = 1;
 		}
 		else if(ele == u"#undef")
 		{
-			return saveFindRow=2;
+			return saveFindRow = 2;
 		}
 		else if(ele == u"#ifdef")
 		{
-			return saveFindRow=3;
+			return saveFindRow = 3;
 		}
 		else if(ele == u"#ifndef")
 		{
-			return saveFindRow=4;
+			return saveFindRow = 4;
 		}
 	}
 	saveFindRow = 0;
 	return saveFindRow;
 }
 
-//判断是否删除#ifdef的内容
-bool isDeleteIfdefContent(vector<u16string>& lines)
+// 判断是否删除#ifdef的内容
+bool isDeleteIfdefContent(vector<u16string>& _lines)
 {
 	int getIfdefRowNumber;
 	u16string ifdefContent;
-	ifdefContent = getRelationContent(lines);
-	return greatFindDefineChart(ifdefContent,3);
+	ifdefContent = getRelationContent(_lines);
+	return greatFindDefineChart(ifdefContent, 3);
 }
 
-//找最后一个endif
-int toFindEndifRow(vector<u16string>& lines)
+// 找最后一个endif
+int toFindEndifRow(vector<u16string>& _lines)
 {
 	int lastEndifRow = 1;
 	vector<u16string> isHaveInclude;
 	stack<u16string> isMatchingStack;
-	isHaveInclude = getIsSharpRow(lines);
+	isHaveInclude = getIsSharpRow(_lines);
 	for (auto element: isHaveInclude)
 	{
 		if (element == u"#ifdef" || element == u"#ifndef")
 		{
 			isMatchingStack.push(element);
-			lastEndifRow ++;
+			lastEndifRow++;
 		}
 		else if(element == u"#endif") 
 		{
-				isMatchingStack.pop();
-				lastEndifRow ++;
-				if(isMatchingStack.empty())
-				{
-					return lastEndifRow - 1;
-				}
+			isMatchingStack.pop();
+			lastEndifRow++;
+			if(isMatchingStack.empty())
+			{
+				return lastEndifRow-1;
+			}
 		}
 		else
 		{
-			lastEndifRow ++;
+			lastEndifRow++;
 		}
 	}
 	return lastEndifRow;
 }
 
-//删除#ifndef与否
-vector<u16string> dealIfndefContent(vector<u16string>& lines,bool statement)
+// 删除#ifndef与否
+vector<u16string> dealIfndefContent(vector<u16string>& _lines, const bool& _statement)
 {
 	vector<u16string> saveDealIfdef;
 	bool isDelete;
 	int getIfdefRowNumber = 0;
 	int getEndifRowNumber = 0;
 	int isWhereRow =1 ;
-	getIfdefRowNumber = toFindDefineRow(lines);
-	getEndifRowNumber = toFindEndifRow(lines);
-	isDelete = isDeleteIfdefContent(lines);
-	for (auto element: lines)
+	getIfdefRowNumber = toFindDefineRow(_lines);
+	getEndifRowNumber = toFindEndifRow(_lines);
+	isDelete = isDeleteIfdefContent(_lines);
+	for (auto element: _lines)
 	{
 		if (isWhereRow == getIfdefRowNumber )
 		{
@@ -517,18 +516,18 @@ vector<u16string> dealIfndefContent(vector<u16string>& lines,bool statement)
 }
 
 
-//删除#ifdef与否
-vector<u16string> dealIfdefContent(vector<u16string>& lines,bool statement)
+// 删除#ifdef与否
+vector<u16string> dealIfdefContent(vector<u16string>& _lines, const bool& _statement)
 {
 	vector<u16string> saveDealIfdef;
 	bool isDelete;
 	int getIfdefRowNumber = 0;
 	int getEndifRowNumber = 0;
 	int isWhereRow =1 ;
-	getIfdefRowNumber = toFindDefineRow(lines);
-	getEndifRowNumber = toFindEndifRow(lines);
-	isDelete = isDeleteIfdefContent(lines);
-	for (auto element: lines)
+	getIfdefRowNumber = toFindDefineRow(_lines);
+	getEndifRowNumber = toFindEndifRow(_lines);
+	isDelete = isDeleteIfdefContent(_lines);
+	for (auto element: _lines)
 	{
 		if (isWhereRow == getIfdefRowNumber)
 		{
@@ -559,13 +558,13 @@ vector<u16string> dealIfdefContent(vector<u16string>& lines,bool statement)
 	return saveDealIfdef;
 }
 
-//最终处理#define语句
-vector<u16string> isRelation(vector<u16string>& lines)
+// 最终处理#define语句
+vector<u16string> isRelation(vector<u16string>& _lines)
 {
 	int tofineDefineRow;
 	vector<u16string> saveRelationRow;
-	tofineDefineRow = getFirstDefineRow(lines);
-	saveRelationRow = lines;
+	tofineDefineRow = getFirstDefineRow(_lines);
+	saveRelationRow = _lines;
 	while (tofineDefineRow != 0)
 	{
 		if (tofineDefineRow == 1)
@@ -593,4 +592,15 @@ vector<u16string> isRelation(vector<u16string>& lines)
 		}
 	}
 	return saveRelationRow;
+}
+
+// 这是预处理程序的主函数
+vector<u16string> preProcess(vector<u16string>& _lines)
+{
+	_lines = removeBlank(_lines);
+	_lines = removeExplabation(_lines);
+	_lines = expansionIncludeFile(_lines);
+	_lines = removeExplabation(_lines);
+	_lines = isRelation(_lines);
+	return _lines;
 }
