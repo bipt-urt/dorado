@@ -29,6 +29,7 @@ u16string keywordTable(const u16string& element)
 
 void toJudge(vector<word>& word);
 vector<u16string> creatAssemblyCode(vector<word>& _code);
+int variableTable(u16string& var, int funtion);
 
 vector<u16string> getCategory(const char16_t& word)
 {
@@ -176,7 +177,10 @@ vector<u16string> wordSegment(const u16string& line)
 		res.push_back(block);
 	}
 	toJudge(res);
-	returnAssemblyCode = creatAssemblyCode(res);
+	if(res.size()>3)
+	{
+		returnAssemblyCode = creatAssemblyCode(res);
+	}
 	return returnAssemblyCode;
 }
 
@@ -186,13 +190,37 @@ vector<u16string> creatAssemblyCode(vector<word>& _code)
 	if (_code[0]._word == u"mem")
 	{
 		tempCode.push_back(u"LI R1 "+_code[5]._word);
-		tempCode.push_back(u"LI R0 "+_code[5]._word);
+		tempCode.push_back(u"LI R0 "+_code[2]._word.substr(0,2));
+		tempCode.push_back(u"SLL R0 R0 0");
+		tempCode.push_back(u"SW R0 R1 0");
+	}
+	else if(_code[0]._word == u"int")
+	{
+		int address = variableTable(_code[1]._word,3);
+		u16string addressStr = intToHexString(address);
+		tempCode.push_back(u"LI R1 "+_code[3]._word);
+		tempCode.push_back(u"LI R0 "+addressStr.substr(0,2));
+		tempCode.push_back(u"SLL R0 R0 0");
+		tempCode.push_back(u"SW R0 R1 "+addressStr.substr(2,2));
+	}
+	else if(_code[0]._type == u"variable")
+	{
+		int address = variableTable(_code[0]._word,3);
+		u16string addressStr = intToHexString(address);
+		tempCode.push_back(u"LI R1 "+_code[2]._word);
+		tempCode.push_back(u"LI R0 "+addressStr.substr(0,2));
+		tempCode.push_back(u"SLL R0 R0 0");
+		tempCode.push_back(u"SW R0 R1 "+addressStr.substr(2,2));
+	}
+	for (auto element: tempCode)
+	{
+		cout<<to_bytes(element)<<endl;
 	}
 	return tempCode;
 }
 
 //变量表
-bool variableTable(u16string& var, int funtion)
+int variableTable(u16string& var, int funtion)
 {
 	static int addr = 0xbf00;
 	static map<u16string, int> varTable;
@@ -219,6 +247,10 @@ bool variableTable(u16string& var, int funtion)
 		{
 			doradoError(302);
 		}
+	}
+	else if(funtion == 3)
+	{
+		return varTable.find(var)->second;
 	}
 	return 0;
 }

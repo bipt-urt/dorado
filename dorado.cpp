@@ -38,6 +38,6 @@ int main(int argc, char* argv[])
 	}
 	preProcess(lines);
 	splitBlock(lines);
-	wordSegment(u" mem[8000] = 125;");
+	wordSegment(u"int a = 125");
 	return 0;
 }
