@@ -22,7 +22,7 @@ using namespace std;
 #include "u16string.h"
 #include "dorado.h"
 #include "preProcess.h"
-#include "doradoTypes.h"
+#include "doradoCompile.h"
 #include "splitBlock.h"
 #include "participle.h"
 

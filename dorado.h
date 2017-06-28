@@ -8,6 +8,11 @@ void doradoError(const u16string& _information = u"")
 	exit(exitFailure);
 }
 
+void doradoError(const int& _errorNumber)
+{
+	
+}
+
 void cmdProcess(int argc, char* argv[])
 {
 	
