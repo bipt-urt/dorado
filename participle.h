@@ -193,7 +193,7 @@ vector<u16string> creatAssemblyCode(vector<word>& _code)
 		tempCode.push_back(u"LI R1 "+_code[5]._word);
 		tempCode.push_back(u"LI R0 "+_code[2]._word.substr(0,2));
 		tempCode.push_back(u"SLL R0 R0 0");
-		tempCode.push_back(u"SW R0 R1 0");
+		tempCode.push_back(u"SW R0 R1 "+_code[2]._word.substr(2,2));
 	}
 	else if(_code[0]._word == u"int")
 	{
