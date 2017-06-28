@@ -27,3 +27,34 @@ void showCode(const vector<u16string>& _lines)
 	}
 	return;
 }
+
+u16string intToHexString(const int& _number)
+{
+	stringstream cvt;
+	cvt<<hex<<_number;
+	string res;
+	u16string res16;
+	cvt>>res;
+	res16 = from_bytes(res);
+	return res16;
+}
+
+u16string intToDecString(const int& _number)
+{
+	stringstream cvt;
+	cvt<<_number;
+	string res;
+	u16string res16;
+	cvt>>res;
+	res16 = from_bytes(res);
+	return res16;
+}
+
+int stringToInt(const u16string& _str)
+{
+	int res;
+	stringstream cvt;
+	cvt<<to_bytes(_str);
+	cvt>>res;
+	return res;
+}
