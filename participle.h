@@ -32,7 +32,10 @@ vector<u16string> getCategory(const char16_t& word)
 		{u'6', {u"number",u"alphabet"}}, {u'7', {u"number",u"alphabet"}},
 		{u'8', {u"number",u"alphabet"}}, {u'9', {u"number",u"alphabet"}},
 		{u'=', {u"operator"}},
-		{u';', {u"endl"}}
+		{u';', {u"endl"}},
+		{u'[', {u"lBracket"}},{u']', {u"rBracket"}},
+		{u'_', {u"alphabet"}},
+
 	};
 	auto search = lookUpTable.find(word);
 	if (search != lookUpTable.end()) 
@@ -93,11 +96,22 @@ vector<word> wordSegment(const u16string& line)
 	}
 	if (saveWord.size())
 	{
-		getWordAndType.push_back(saveWord);
+		if (saveWord == u";")
+		{
+			getWordAndType.push_back(saveWord);
+		}
+		else
+		{
+			doradoError(300);
+		}
 	}
 	for (auto element: getWordAndType)
 	{
 		cout<<to_bytes(element)<<"@";
+	}
+	if (getCategory((getWordAndType[0])[0])[0] == u"number")
+	{
+		doradoError(301);
 	}
 	return res;
 }
