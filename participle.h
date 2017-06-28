@@ -15,6 +15,7 @@ u16string keywordTable(const u16string& element)
 		{u"if", u"ifSentence"}, {u"while", u"whileSentence"},
 		{u"(", u"lBracket"}, {u")", u"rBracket"},
 		{u";", u"endl"},{u"[", u"lBracket"}, {u"]", u"rBracket"},
+		{u"return", u"return"},
 	};
 	auto search = maps.find(element);
 	if (search != maps.end()) 
@@ -280,6 +281,7 @@ void judgeVariable(vector<word>& word)
 	}
 	else
 	{
+		cout<<"&&jk"<<endl;
 		doradoError(301);
 	}
 }
@@ -297,6 +299,7 @@ void toJudge(vector<word>& _word)
 		{
 			judgeVariable(_word);
 		}
+		break;
 	}
 }
 

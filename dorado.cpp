@@ -38,6 +38,11 @@ int main(int argc, char* argv[])
 	preProcess(lines);
 	auto blocks = splitBlock(lines);
 	auto mainLines = fetchMainFunction(blocks);
-	wordSegment(u" mem[8000] = 125;");
+	for (auto line: mainLines)
+	{
+		cout<<"@@@"<<to_bytes(line)<<endl;
+		wordSegment(line);
+		cout<<"This line end."<<endl;
+	}
 	return 0;
 }
