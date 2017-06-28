@@ -14,7 +14,7 @@ u16string keywordTable(const u16string& element)
 		{u"/", u"operator"}, {u"-", u"operator"},
 		{u"if", u"ifSentence"}, {u"while", u"whileSentence"},
 		{u"(", u"lBracket"}, {u")", u"rBracket"},
-		{u";", u"endl"}
+		{u";", u"endl"},{u"[", u"lBracket"}, {u"]", u"rBracket"},
 	};
 	auto search = maps.find(element);
 	if (search != maps.end()) 
@@ -27,7 +27,8 @@ u16string keywordTable(const u16string& element)
 	}
 }
 
-vector<u16string> toJudge(vector<word>& word);
+void toJudge(vector<word>& word);
+vector<u16string> creatAssemblyCode(vector<word>& _code);
 
 vector<u16string> getCategory(const char16_t& word)
 {
@@ -75,11 +76,11 @@ vector<u16string> getCategory(const char16_t& word)
 	}
 }
 
-u16string variableLabel(const u16string& element)
+u16string variableLabel(const u16string& _element)
 {
 	u16string empty;
 	vector<u16string> temp;
-	for (auto ele: element)
+	for (auto ele: _element)
 	{
 		temp = getCategory(ele);
 		if (temp[0] == u"number")
@@ -94,9 +95,11 @@ u16string variableLabel(const u16string& element)
 	}
 }
 
-vector<word> wordSegment(const u16string& line)
+vector<u16string> wordSegment(const u16string& line)
 {
 	vector<word> res;
+	u16string temp;
+	vector<u16string> returnAssemblyCode;
 	word block;
 	vector<u16string> getWordAndType;
 	u16string saveWord;
@@ -153,10 +156,6 @@ vector<word> wordSegment(const u16string& line)
 			doradoError(300);
 		}
 	}
-	for (auto element: getWordAndType)
-	{
-		cout<<to_bytes(element)<<"@";
-	}
 	if (getCategory((getWordAndType[0])[0])[0] == u"number")
 	{
 		doradoError(301);
@@ -169,22 +168,35 @@ vector<word> wordSegment(const u16string& line)
 		if (block._type.empty())
 		{
 			block._type = variableLabel(element);
+			if (element == u"mem")
+			{
+				block._type = u"menSentence";
+			}
 		}
 		res.push_back(block);
 	}
-	for (auto element: res)
-	{
-		cout<<endl<<to_bytes(element._word)<<"%"<<to_bytes(element._type)<<endl;
-	}
 	toJudge(res);
-	return res;
+	returnAssemblyCode = creatAssemblyCode(res);
+	return returnAssemblyCode;
 }
 
+vector<u16string> creatAssemblyCode(vector<word>& _code)
+{
+	vector<u16string> tempCode;
+	if (_code[0]._word == u"mem")
+	{
+		tempCode.push_back(u"LI R1 "+_code[5]._word);
+		tempCode.push_back(u"LI R0 "+_code[5]._word);
+	}
+	return tempCode;
+}
+
+//变量表
 bool variableTable(u16string& var, int funtion)
 {
 	static int addr = 0xbf00;
 	static map<u16string, int> varTable;
-	if(funtion == 1)
+	if (funtion == 1)
 	{
 		auto search = varTable.find(var);
 		if (search != varTable.end())
@@ -196,12 +208,25 @@ bool variableTable(u16string& var, int funtion)
 			varTable.insert(pair<u16string, int>(var, addr++));
 		}
 	}
+	else if(funtion == 2)
+	{
+		auto search = varTable.find(var);
+		if (search != varTable.end())
+		{
+			return 0;
+		}
+		else
+		{
+			doradoError(302);
+		}
+	}
 	return 0;
 }
 
+//判断定义语句
 void judgeInt(vector<word>& word)
 {
-	if(word[1]._type == u"number")
+	if (word[1]._type == u"number")
 	{
 		doradoError(301);
 	}
@@ -209,38 +234,38 @@ void judgeInt(vector<word>& word)
 	{
 		if (element._type == u"variable")
 		{
-			variableTable(word[1]._word,1);
+			variableTable(element._word,1);
 		}
 	}
 }
 
+//判断赋值语句
 void judgeVariable(vector<word>& word)
 {
-	
+	if (word.size() == 4)
+	{
+		variableTable(word[1]._word,2);
+	}
+	else
+	{
+		doradoError(301);
+	}
 }
 
-vector<u16string> toJudge(vector<word>& word)
+
+void toJudge(vector<word>& _word)
 {
-	vector<u16string> res;
-	u16string temp;
-	for(auto element: word)
+	for (auto element: _word)
 	{
 		if (element._type == u"type")
 		{
-			judgeInt(word);
-			res.push_back(element._word);
+			judgeInt(_word);
 		}
 		else if(element._type == u"variable")
 		{
-			judgeVariable(word);
-			res.push_back(element._word);
-		}
-		else
-		{
-			res.push_back(element._word);
+			judgeVariable(_word);
 		}
 	}
-	return res;
 }
 
 
