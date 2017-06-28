@@ -38,11 +38,16 @@ int main(int argc, char* argv[])
 	preProcess(lines);
 	auto blocks = splitBlock(lines);
 	auto mainLines = fetchMainFunction(blocks);
+	vector<string> mips;
 	for (auto line: mainLines)
 	{
-		cout<<"@@@"<<to_bytes(line)<<endl;
-		wordSegment(line);
-		cout<<"This line end."<<endl;
+		vector<u16string> mips16 = wordSegment(line);
+		for (auto element: mips16)
+		{
+			mips.push_back(to_bytes(element));
+		}
 	}
+	mips.push_back("end");
+	msm(mips);
 	return 0;
 }

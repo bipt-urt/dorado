@@ -213,10 +213,10 @@ vector<u16string> creatAssemblyCode(vector<word>& _code)
 		tempCode.push_back(u"SLL R0 R0 0");
 		tempCode.push_back(u"SW R0 R1 "+addressStr.substr(2,2));
 	}
-	for (auto element: tempCode)
+	/*for (auto element: tempCode)
 	{
 		cout<<to_bytes(element)<<endl;
-	}
+	}*/
 	return tempCode;
 }
 
@@ -281,7 +281,6 @@ void judgeVariable(vector<word>& word)
 	}
 	else
 	{
-		cout<<"&&jk"<<endl;
 		doradoError(301);
 	}
 }

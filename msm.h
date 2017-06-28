@@ -232,6 +232,10 @@ string translate(const vector<string>& _ins)
 	{
 		res = "01110" + rx(_ins[1]) + imm(_ins[2]);
 	}
+	else if(instruction == "end")
+	{
+		res = "0000000000000000";
+	}
 	else if(instruction == "int")
 	{
 		res = "111110000000" + imm(_ins[1], 4);
@@ -416,38 +420,20 @@ void showUsage(const string& _appName = "")
 	cout<<"\t.start:  起始内存地址, 用于计算B指令跳转的内存位置"<<endl;
 	return;
 }
-/*
-int main(int argc, char* argv[])
+
+void msm(const vector<string>& _mips)
 {
-	bool DEBUG = false;
-	if (argc < 2)
+	string outputFilename = "out.bin";
+	fstream resFile(outputFilename, std::ios::out);
+	string line;
+	for (auto line: _mips)
 	{
-		showUsage(string(argv[0]));
-	}
-	else
-	{
-		string outputFilename = "out.bin";
-		if (argc == 3)
+		vector<string> splitedInstruction = split(strToLower(line));
+		if (splitedInstruction.size())
 		{
-			outputFilename = argv[2];
-		}
-		fstream mipsFile(argv[1], std::ios::in);
-		fstream resFile(outputFilename, std::ios::out);
-		string line;
-		while (getline(mipsFile, line))
-		{
-			vector<string> splitedInstruction = split(strToLower(line));
-			if (splitedInstruction.size())
-			{
-				string res = translate(splitedInstruction);
-				if (DEBUG)
-				{
-					cout<<line<<"\t"<<res<<endl;
-				}
-				resFile<<toBin(res);
-			}
+			string res = translate(splitedInstruction);
+			resFile<<toBin(res);
 		}
 	}
-	return 0;
+	return;
 }
-*/
