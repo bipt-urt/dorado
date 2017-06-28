@@ -4,6 +4,29 @@ struct word
 	u16string _type;
 };
 
+u16string keywordTable(const u16string& element)
+{
+	u16string empty;
+	map<u16string, u16string> maps = 
+	{
+		{u"int", u"type"}, {u"char", u"type"},
+		{u"=", u"operator"}, {u"+", u"operator"}, {u"*", u"operator"},
+		{u"/", u"operator"}, {u"-", u"operator"},
+		{u"if", u"ifSentence"}, {u"while", u"whileSentence"},
+		{u"(", u"lBracket"}, {u")", u"rBracket"},
+		{u";", u"endl"}
+	};
+	auto search = maps.find(element);
+	if (search != maps.end()) 
+	{
+		return search->second;
+	}
+	else
+	{
+		return empty;
+	}
+}
+
 vector<u16string> getCategory(const char16_t& word)
 {
 	vector<u16string> empty;
@@ -33,9 +56,11 @@ vector<u16string> getCategory(const char16_t& word)
 		{u'8', {u"number",u"alphabet"}}, {u'9', {u"number",u"alphabet"}},
 		{u'=', {u"operator"}},
 		{u';', {u"endl"}},
-		{u'[', {u"lBracket"}},{u']', {u"rBracket"}},
+		{u'[', {u"lBracket"}}, {u']', {u"rBracket"}},
+		{u'(', {u"lBracket"}}, {u')', {u"rBracket"}},
 		{u'_', {u"alphabet"}},
-
+		{u'-', {u"operator"}},{u'+', {u"operator"}},{u'*', {u"operator"}},
+		{u'/', {u"operator"}}
 	};
 	auto search = lookUpTable.find(word);
 	if (search != lookUpTable.end()) 
@@ -48,9 +73,29 @@ vector<u16string> getCategory(const char16_t& word)
 	}
 }
 
+u16string variableTable(const u16string& element)
+{
+	u16string empty;
+	vector<u16string> temp;
+	for (auto ele: element)
+	{
+		temp = getCategory(ele);
+		if (temp[0] == u"number")
+		{
+			return u"number";
+		}
+		else
+		{
+			return u"variable";
+		}
+		break;
+	}
+}
+
 vector<word> wordSegment(const u16string& line)
 {
 	vector<word> res;
+	word block;
 	vector<u16string> getWordAndType;
 	u16string saveWord;
 	u16string saveElementAttribute;
@@ -102,6 +147,7 @@ vector<word> wordSegment(const u16string& line)
 		}
 		else
 		{
+			getWordAndType.push_back(saveWord);
 			doradoError(300);
 		}
 	}
@@ -113,5 +159,21 @@ vector<word> wordSegment(const u16string& line)
 	{
 		doradoError(301);
 	}
+	for (auto element: getWordAndType)
+	{
+		 
+		block._word = element;
+		block._type = keywordTable(element);
+		if (block._type.empty())
+		{
+			block._type = variableTable(element);
+		}
+		res.push_back(block);
+	}
+	for (auto element: res)
+	{
+		cout<<endl<<to_bytes(element._word)<<"%"<<to_bytes(element._type)<<endl;
+	}
 	return res;
 }
+
