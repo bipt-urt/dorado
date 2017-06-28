@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 {
 	int x = 3;
 	int y = 2;
-	printf(add(x, y));
+	mem[8880] = x;
 	return 0;
 }
 
