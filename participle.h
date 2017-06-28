@@ -35,7 +35,8 @@ vector<u16string> getCategory(const char16_t& word)
 		{u';', {u"endl"}},
 		{u'[', {u"lBracket"}},{u']', {u"rBracket"}},
 		{u'_', {u"alphabet"}},
-
+		{u'-', {u"operator"}},{u'+', {u"operator"}},{u'*', {u"operator"}},
+		{u'/', {u"operator"}}
 	};
 	auto search = lookUpTable.find(word);
 	if (search != lookUpTable.end()) 
@@ -46,6 +47,11 @@ vector<u16string> getCategory(const char16_t& word)
 	{
 		return empty;
 	}
+}
+
+bool isOperatorChart(char16_t)
+{
+
 }
 
 vector<word> wordSegment(const u16string& line)
@@ -113,5 +119,6 @@ vector<word> wordSegment(const u16string& line)
 	{
 		doradoError(301);
 	}
+
 	return res;
 }
