@@ -36,7 +36,8 @@ int main(int argc, char* argv[])
 		lines.push_back(from_bytes(getSourceFileEachRow));
 	}
 	preProcess(lines);
-	splitBlock(lines);
+	auto blocks = splitBlock(lines);
+	auto mainLines = fetchMainFunction(blocks);
 	wordSegment(u" mem[8000] = 125;");
 	return 0;
 }

@@ -129,8 +129,15 @@ vector<blockSegment> splitBlock(const vector<u16string>& _lines)
 		}
 		char16_t endChar = findSplitSymbol(_lines, beginRowNumber);
 		u16string firstWord = getFirstWord(_lines[beginRowNumber]);
-		cout<<beginRowNumber<<"-"<<endRowNumber<<":"<<block.lines.size()<<"@"<<to_bytes(firstWord)<<"#"<<char(endChar)<<endl;
+		//cout<<beginRowNumber<<"-"<<endRowNumber<<":"<<block.lines.size()<<"@"<<to_bytes(firstWord)<<"#"<<char(endChar)<<endl;
 		res.push_back(block);
 	}
+	return res;
+}
+
+vector<u16string> fetchMainFunction(const vector<blockSegment>& _blocks)
+{
+	vector<u16string> res;
+	cout<<res.size()<<endl;
 	return res;
 }
