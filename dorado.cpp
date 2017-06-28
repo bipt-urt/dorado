@@ -22,7 +22,6 @@ using namespace std;
 #include "u16string.h"
 #include "dorado.h"
 #include "preProcess.h"
-#include "doradoCompile.h"
 #include "splitBlock.h"
 #include "participle.h"
 #include "msm.h"
