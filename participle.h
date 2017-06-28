@@ -27,6 +27,8 @@ u16string keywordTable(const u16string& element)
 	}
 }
 
+vector<u16string> toJudge(vector<word>& word);
+
 vector<u16string> getCategory(const char16_t& word)
 {
 	vector<u16string> empty;
@@ -73,7 +75,7 @@ vector<u16string> getCategory(const char16_t& word)
 	}
 }
 
-u16string variableTable(const u16string& element)
+u16string variableLabel(const u16string& element)
 {
 	u16string empty;
 	vector<u16string> temp;
@@ -166,7 +168,7 @@ vector<word> wordSegment(const u16string& line)
 		block._type = keywordTable(element);
 		if (block._type.empty())
 		{
-			block._type = variableTable(element);
+			block._type = variableLabel(element);
 		}
 		res.push_back(block);
 	}
@@ -174,6 +176,72 @@ vector<word> wordSegment(const u16string& line)
 	{
 		cout<<endl<<to_bytes(element._word)<<"%"<<to_bytes(element._type)<<endl;
 	}
+	toJudge(res);
 	return res;
 }
+
+bool variableTable(u16string& var, int funtion)
+{
+	static int addr = 0xbf00;
+	static map<u16string, int> varTable;
+	if(funtion == 1)
+	{
+		auto search = varTable.find(var);
+		if (search != varTable.end())
+		{
+			doradoError(302);
+		}
+		else
+		{
+			varTable.insert(pair<u16string, int>(var, addr++));
+		}
+	}
+	return 0;
+}
+
+void judgeInt(vector<word>& word)
+{
+	if(word[1]._type == u"number")
+	{
+		doradoError(301);
+	}
+	for (auto element: word)
+	{
+		if (element._type == u"variable")
+		{
+			variableTable(word[1]._word,1);
+		}
+	}
+}
+
+void judgeVariable(vector<word>& word)
+{
+	
+}
+
+vector<u16string> toJudge(vector<word>& word)
+{
+	vector<u16string> res;
+	u16string temp;
+	for(auto element: word)
+	{
+		if (element._type == u"type")
+		{
+			judgeInt(word);
+			res.push_back(element._word);
+		}
+		else if(element._type == u"variable")
+		{
+			judgeVariable(word);
+			res.push_back(element._word);
+		}
+		else
+		{
+			res.push_back(element._word);
+		}
+	}
+	return res;
+}
+
+
 
