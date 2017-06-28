@@ -25,6 +25,7 @@ using namespace std;
 #include "doradoCompile.h"
 #include "splitBlock.h"
 #include "participle.h"
+#include "msm.h"
 
 int main(int argc, char* argv[])
 {
@@ -36,7 +37,6 @@ int main(int argc, char* argv[])
 		lines.push_back(from_bytes(getSourceFileEachRow));
 	}
 	preProcess(lines);
-	showCode(lines);
 	splitBlock(lines);
 	wordSegment(u"int a12=123;");
 	return 0;
