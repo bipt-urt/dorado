@@ -27,8 +27,3 @@ void showCode(const vector<u16string>& _lines)
 	}
 	return;
 }
-
-void showCode(const int& _errorCode)
-{
-	return;
-}
