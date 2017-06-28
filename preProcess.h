@@ -68,7 +68,7 @@ void isMatching(vector<u16string>& _lines)
 		{
 			if (isMatchingStack.empty())
 			{
-				doradoError(u"没有#ifdef/#ifndef与之匹配");
+				doradoError(207);
 			}
 			else
 			{
@@ -78,7 +78,7 @@ void isMatching(vector<u16string>& _lines)
 	}
 	if(!isMatchingStack.empty())
 	{
-		doradoError(u"缺少endif");
+		doradoError(207);
 	}
 }
 
@@ -210,11 +210,13 @@ vector<u16string> secondToRemoveExplabation(vector<u16string>& _lines)
 				{
 					break;
 				}
-				else if(element[saveRemoveExplabationRow.size()-1] != u'"' && element[saveRemoveExplabationRow.size()+1] != u'/' && element[saveRemoveExplabationRow.size()-1] != u'/')
+				else if(element[saveRemoveExplabationRow.size()-1] != u'"' &&
+						element[saveRemoveExplabationRow.size()+1] != u'/' &&
+						element[saveRemoveExplabationRow.size()-1] != u'/')
 				{
 					if (element[saveRemoveExplabationRow.size()+1] != u'*')
 					{
-						doradoError(u"程序有错");
+						doradoError(209);
 						saveRemoveExplabationRow += ele;
 						continue;
 					}
